@@ -1,4 +1,3 @@
-// Weather.tsx
 import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
@@ -18,6 +17,8 @@ const Weather: React.FC = () => {
         );
         setWeatherData(response.data);
         console.log('RESULT === ', response);
+        console.log('typeof response == ', response);
+
         const temperatureIntegerPart = Math.floor(response.data.main.temp);
 
         console.log('temperatureIntegerPart === ', temperatureIntegerPart);
