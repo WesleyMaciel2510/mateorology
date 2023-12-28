@@ -1,4 +1,7 @@
+require('@babel/register')({extensions: ['.js', '.jsx', '.ts', '.tsx']});
 const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
+
+const defaultConfig = getDefaultConfig(__dirname);
 
 /**
  * Metro configuration
@@ -6,6 +9,10 @@ const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {};
+const config = {
+  resolver: {
+    assetExts: [...getDefaultConfig(__dirname).resolver.assetExts, 'json'],
+  },
+};
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

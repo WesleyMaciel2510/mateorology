@@ -1,5 +1,4 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
@@ -20,18 +19,16 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const Routes: React.FC = () => {
+const AppStack = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Search" component={Search} />
-        <Stack.Screen name="User" component={User} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Policy" component={Policy} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="User" component={User} />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="Policy" component={Policy} />
+    </Stack.Navigator>
   );
 };
 
-export default Routes;
+export default AppStack;

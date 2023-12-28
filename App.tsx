@@ -1,8 +1,15 @@
 import React from 'react';
-import Routes from './src/routes';
+import AppStack from './src/routes';
+import BottomIcons from './src/components/bottomIcons';
+import {NavigationContainer} from '@react-navigation/native';
 
 const App: React.FC = () => {
-  return <Routes />;
+  return (
+    <NavigationContainer>
+      <AppStack />
+      <BottomIcons />
+    </NavigationContainer>
+  );
 };
 
 export default App;
