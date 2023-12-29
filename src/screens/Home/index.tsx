@@ -1,5 +1,6 @@
 import React from 'react';
 import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {useInit} from './logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function Home(props: Props) {
+  useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
