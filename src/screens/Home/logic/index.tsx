@@ -5,6 +5,7 @@ import {
   getForecast,
   getWeatherDataByCity,
 } from '../../../services/getWeather';
+import fetchWeatherData from '../../../services/openMeteo';
 
 export const useStateVariables = () => {
   const [humidity, setHumidity] = useState(0);
@@ -42,7 +43,9 @@ export const useInit = () => {
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
-    const fetchData = async () => {
+    fetchWeatherData();
+
+    /* const fetchData = async () => {
       try {
         const weatherData = await getWeatherData();
         setHumidity(weatherData.main.humidity);
@@ -61,9 +64,9 @@ export const useInit = () => {
         console.error('Failed to fetch weather data:', error);
       }
     };
-    fetchData();
+    fetchData(); */
   }, []);
-  useOnGetDate();
+  //useOnGetDate();
 };
 
 export const useOnGetDate = () => {

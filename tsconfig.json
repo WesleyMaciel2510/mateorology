@@ -1,5 +1,15 @@
 {
   "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "target": "es2017",
+    "module": "commonjs",
+    "target": "es2017",
+    "module": "commonjs",
+    "target": "es2017",
+    "module": "commonjs",
+    "target": "es2017",
+    "module": "commonjs",
     "jsx": "react",
     "baseUrl": "./",
     "lib": ["ES6", "ES2015"],

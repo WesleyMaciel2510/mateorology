@@ -7,7 +7,7 @@ import {
 } from '../../../services/getWeather';
 
 export const useStateVariables = () => {
-  const [searchText, setSearchText] = useState(0);
+  const [searchText, setSearchText] = useState('');
 
   return {
     searchText,
