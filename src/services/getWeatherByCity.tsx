@@ -11,15 +11,15 @@ interface WeatherData {
 }
 
 const apiKey = 'f7762ab029a0cdba9c2c103146e48e61';
-const lat = '-19.7502';
-const long = '-47.9325';
+const city = 'uberaba';
+const units = 'metric';
 
-export const getWeatherData = async (): Promise<WeatherData | null> => {
+export const getWeatherDataByCity = async (): Promise<WeatherData | null> => {
   try {
     const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${apiKey}`,
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`,
     );
-    console.log('chamou getWeatherData');
+    console.log('chamou getWeatherDataByCity');
 
     return response.data;
   } catch (error) {

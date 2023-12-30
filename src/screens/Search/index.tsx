@@ -1,11 +1,22 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import LottieView from 'lottie-react-native';
+import {useSharedState} from './logic';
 
 interface Props {
   navigation: any;
 }
 
 export default function Search(props: Props) {
+  const {searchText, setSearchText} = useSharedState();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -16,8 +27,307 @@ export default function Search(props: Props) {
   // ============================================================================
 
   return (
-    <View>
-      <Text>Search Screen</Text>
-    </View>
+    <>
+      <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
+      <ScrollView style={styles.container}>
+        <View style={styles.titleArea}>
+          <FontAwesome5
+            name={'map-marker-alt'}
+            size={30}
+            color="#fff"
+            style={[styles.iconStyle, {marginLeft: 30}]}
+          />
+          <Text style={styles.titleText}> Search Your City </Text>
+        </View>
+        <View style={styles.searchArea}>
+          <FontAwesome5
+            name={'search'}
+            size={30}
+            color="#5f9dfa"
+            style={styles.iconStyle}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Select Your City"
+            value={searchText}
+            onChangeText={text => setSearchText(text)}
+            placeholderTextColor={'#5f9dfa'}
+            color={'#000'}
+          />
+        </View>
+        <View style={styles.boardArea}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                Uberaba
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                  29º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: 24 {'    '} Max.: 31
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View style={styles.boardArea}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                Uberaba
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                  29º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: 24 {'    '} Max.: 31
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View style={styles.boardArea}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                Uberaba
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                  29º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: 24 {'    '} Max.: 31
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View style={styles.boardArea}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                Uberaba
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                  29º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: 24 {'    '} Max.: 31
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View style={styles.boardArea}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                Uberaba
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                  29º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: 24 {'    '} Max.: 31
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    backgroundColor: '#30acdd',
+    paddingHorizontal: 30,
+  },
+  titleArea: {
+    flexDirection: 'row',
+    margin: 30,
+    justifyContent: 'flex-start',
+  },
+  titleText: {
+    fontSize: 25,
+    color: 'white',
+  },
+  text: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  iconStyle: {
+    marginHorizontal: 10,
+  },
+  input: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  searchArea: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderWidth: 3,
+    borderColor: '#5f9dfa',
+    marginHorizontal: 10,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  boardArea: {
+    flex: 2,
+    padding: 15,
+    backgroundColor: '#288cc3',
+    borderRadius: 20,
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    marginTop: 15,
+  },
+  leftTextContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  rowView: {
+    flexDirection: 'column',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  line: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+  },
+});

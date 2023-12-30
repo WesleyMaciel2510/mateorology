@@ -1,6 +1,6 @@
 import React from 'react';
 import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
-import {useInit} from './logic';
+import {useInit, useSharedState} from './logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 
@@ -9,6 +9,8 @@ interface Props {
 }
 
 export default function Home(props: Props) {
+  const {humidity, precipitation, temperature, description, windSpeed, date} =
+    useSharedState();
   useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -43,11 +45,11 @@ export default function Home(props: Props) {
           source={require('../../assets/animations/cloudy.json')}
           autoPlay
           loop
-          style={[styles.animationArea, {width: 100, height: 100}]}
+          style={[styles.animationArea, {width: 150, height: 150}]}
         />
         <View style={styles.temperatureArea}>
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
-            30 º
+            {temperature[0]}
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
           <Text style={[styles.text, {fontSize: 20}]}>
@@ -62,7 +64,9 @@ export default function Home(props: Props) {
               color="#fff"
               style={{marginLeft: 20}}
             />
-            <Text style={[styles.text, {flex: 1, fontSize: 20}]}>6%</Text>
+            <Text style={[styles.text, {flex: 1, fontSize: 20}]}>
+              {precipitation}
+            </Text>
 
             <FontAwesome5 name={'tint'} size={20} color="#fff" />
             <Text style={[styles.text, {flex: 1, fontSize: 20}]}> 90%</Text>
@@ -88,6 +92,8 @@ export default function Home(props: Props) {
                 <Text style={[styles.text, {fontSize: 20}]}> 29º C</Text>
                 <LottieView
                   source={require('../../assets/animations/sun.json')}
+                  autoPlay
+                  loop
                   style={[
                     styles.animationArea,
                     {width: 50, height: 50, margin: 20},
@@ -101,6 +107,8 @@ export default function Home(props: Props) {
                 <Text style={[styles.text, {fontSize: 20}]}>26º C</Text>
                 <LottieView
                   source={require('../../assets/animations/cloudy.json')}
+                  autoPlay
+                  loop
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
@@ -111,6 +119,8 @@ export default function Home(props: Props) {
                 <Text style={[styles.text, {fontSize: 20}]}> 24º C</Text>
                 <LottieView
                   source={require('../../assets/animations/cloud.json')}
+                  autoPlay
+                  loop
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
@@ -121,6 +131,8 @@ export default function Home(props: Props) {
                 <Text style={[styles.text, {fontSize: 20}]}>23º C</Text>
                 <LottieView
                   source={require('../../assets/animations/thunder-rain.json')}
+                  autoPlay
+                  loop
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
@@ -175,7 +187,7 @@ export default function Home(props: Props) {
               <View style={styles.line}>
                 <Text style={[styles.text, {fontSize: 20}]}> Wednesday</Text>
                 <LottieView
-                  source={require('../../assets/animations/cloudy.json')}
+                  source={require('../../assets/animations/sun.json')}
                   style={[
                     styles.animationArea,
                     {width: 50, height: 50, margin: 20},
@@ -192,10 +204,8 @@ export default function Home(props: Props) {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
     flexDirection: 'column',
     backgroundColor: '#30acdd',
   },
