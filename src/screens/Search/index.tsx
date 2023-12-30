@@ -48,7 +48,7 @@ export default function Search(props: Props) {
           />
           <TextInput
             style={styles.input}
-            placeholder="Select Your City"
+            placeholder="Select Your City Here"
             value={searchText}
             onChangeText={text => setSearchText(text)}
             placeholderTextColor={'#5f9dfa'}
