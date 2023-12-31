@@ -1,11 +1,8 @@
 import {useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
-import {
-  getWeatherData,
-  getForecast,
-  getWeatherDataByCity,
-} from '../../../services/getWeather';
-import fetchWeatherData from '../../../services/openMeteo';
+import {getWeatherData} from '../../../services/getWeather';
+import {getForecast} from '../../../services/getForecast';
+import fetchWeatherData from '../../../services/openMeteo/openMeteo';
 
 export const useStateVariables = () => {
   const [humidity, setHumidity] = useState(0);
@@ -43,30 +40,54 @@ export const useInit = () => {
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
-    fetchWeatherData();
+    //fetchWeatherData();
+
+    // ================================================
+    const fetchOpenMeteoData = async () => {
+      try {
+        const weatherData = await fetchWeatherData();
+        // TITLE  ===================================
+        setTemperature([
+          weatherData.current.temperature2m.toString().slice(0, 2),
+          weatherData.daily.temperature2mMin[0].toString().slice(0, 2),
+          weatherData.daily.temperature2mMax[0].toString().slice(0, 2),
+        ]);
+        console.log(
+          'Wind Speed at 10m Km/h= ',
+          weatherData.current.windSpeed10m.toString().slice(0, 3),
+        );
+
+        setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 3));
+        // TODAY AREA ===================================
+      } catch (error) {
+        console.error('Failed to fetch weather data:', error);
+      }
+    };
+    fetchOpenMeteoData();
+    // ================================================
 
     /* const fetchData = async () => {
       try {
-        const weatherData = await getWeatherData();
-        setHumidity(weatherData.main.humidity);
+        const weatherData = await getForecast();
+        //setHumidity(weatherData.main.humidity);
         console.log('weatherData === ', weatherData);
 
-        setPrecipitation(weatherData.main.rain);
+        //setPrecipitation(weatherData.main.rain);
 
-        setTemperature([
-          weatherData.main.temp.toString().slice(0, 2),
-          weatherData.main.temp_min,
-          weatherData.main.temp_max,
-        ]);
-        setDescription(weatherData.weather[0].description);
-        setWindSpeed(weatherData.wind.speed);
+        // setTemperature([
+        //  weatherData.main.temp.toString().slice(0, 2),
+        //  weatherData.main.temp_min,
+        //  weatherData.main.temp_max,
+        //]);
+        //setDescription(weatherData.weather[0].description);
+        //setWindSpeed(weatherData.wind.speed);
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
     };
     fetchData(); */
   }, []);
-  //useOnGetDate();
+  useOnGetDate();
 };
 
 export const useOnGetDate = () => {
@@ -102,3 +123,6 @@ export const useOnGetDate = () => {
     getCurrentDate();
   }, [setDate]);
 };
+
+/* export const useOnAnimation = () => {
+}; */

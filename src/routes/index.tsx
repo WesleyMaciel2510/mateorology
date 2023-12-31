@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
 import User from '../screens/User';
-import Settings from '../screens/Settings';
+import NextForecast from '../screens/NextForecast';
 import Policy from '../screens/Policy';
 
 // Define the RootStackParamList directly in the Routes file
@@ -25,7 +25,7 @@ const AppStack = () => {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="User" component={User} />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="NextForecast" component={NextForecast} />
       <Stack.Screen name="Policy" component={Policy} />
     </Stack.Navigator>
   );

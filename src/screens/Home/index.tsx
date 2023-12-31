@@ -3,6 +3,7 @@ import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {useInit, useSharedState} from './logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
+import GreetingComponent from '../../components/greeting';
 
 interface Props {
   navigation: any;
@@ -41,20 +42,21 @@ export default function Home(props: Props) {
             />
           </View>
         </View>
+        <GreetingComponent />
         <LottieView
-          source={require('../../assets/animations/cloudy.json')}
+          source={require('../../assets/animations/night-cloud.json')}
           autoPlay
           loop
           style={[styles.animationArea, {width: 150, height: 150}]}
         />
         <View style={styles.temperatureArea}>
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
-            {temperature[0]}
+            {temperature[0]}º
+          </Text>
+          <Text style={[styles.text, {fontSize: 20}]}>
+            Min.: {temperature[1]}º {'     '}Max.: {temperature[2]}º
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
-          <Text style={[styles.text, {fontSize: 20}]}>
-            Max.: 31º {'     '}Min.: 25º
-          </Text>
         </View>
         <View style={styles.weatherBarArea}>
           <View style={styles.simpleBar}>
@@ -72,7 +74,9 @@ export default function Home(props: Props) {
             <Text style={[styles.text, {flex: 1, fontSize: 20}]}> 90%</Text>
 
             <FontAwesome5 name={'wind'} size={20} color="#fff" />
-            <Text style={[styles.text, {flex: 1, fontSize: 20}]}> 19 km/h</Text>
+            <Text style={[styles.text, {flex: 1, fontSize: 20}]}>
+              {windSpeed} km/h
+            </Text>
           </View>
           <View style={styles.boardArea}>
             <View style={{flexDirection: 'row', padding: 10}}>

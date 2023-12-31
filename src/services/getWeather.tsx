@@ -27,3 +27,5 @@ export const getWeatherData = async (): Promise<WeatherData | null> => {
     return null;
   }
 };
+
+/* weatherData ===  {"base": "stations", "clouds": {"all": 40}, "cod": 200, "coord": {"lat": -19.7502, "lon": -47.9325}, "dt": 1703978489, "id": 3445839, "main": {"feels_like": 299.09, "humidity": 78, "pressure": 1015, "temp": 298.47, "temp_max": 298.47, "temp_min": 298.47}, "name": "Uberaba", "rain": {"1h": 0.24}, "sys": {"country": "BR", "id": 8472, "sunrise": 1703925282, "sunset": 1703973193, "type": 1}, "timezone": -10800, "visibility": 10000, "weather": [{"description": "light rain", "icon": "10n", "id": 500, "main": "Rain"}], "wind": {"deg": 180, "speed": 3.6}} */
