@@ -10,8 +10,16 @@ interface Props {
 }
 
 export default function Home(props: Props) {
-  const {humidity, precipitation, temperature, description, windSpeed, date} =
-    useSharedState();
+  const {
+    humidity,
+    precipitation,
+    temperature,
+    description,
+    windSpeed,
+    date,
+    temperatureHourly,
+    nextFourHours,
+  } = useSharedState();
   useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -66,15 +74,18 @@ export default function Home(props: Props) {
               color="#fff"
               style={{marginLeft: 20}}
             />
-            <Text style={[styles.text, {flex: 1, fontSize: 20}]}>
+            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
               {precipitation}
             </Text>
 
             <FontAwesome5 name={'tint'} size={20} color="#fff" />
-            <Text style={[styles.text, {flex: 1, fontSize: 20}]}> 90%</Text>
+            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
+              {' '}
+              90%
+            </Text>
 
             <FontAwesome5 name={'wind'} size={20} color="#fff" />
-            <Text style={[styles.text, {flex: 1, fontSize: 20}]}>
+            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
               {windSpeed} km/h
             </Text>
           </View>
@@ -93,7 +104,9 @@ export default function Home(props: Props) {
             </View>
             <View style={styles.columnView}>
               <View style={{flex: 1}}>
-                <Text style={[styles.text, {fontSize: 20}]}> 29º C</Text>
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {temperatureHourly[0]}º C
+                </Text>
                 <LottieView
                   source={require('../../assets/animations/sun.json')}
                   autoPlay
@@ -104,11 +117,13 @@ export default function Home(props: Props) {
                   ]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  15:00
+                  {nextFourHours[0]}:00
                 </Text>
               </View>
               <View style={{flex: 1}}>
-                <Text style={[styles.text, {fontSize: 20}]}>26º C</Text>
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {temperatureHourly[1]}º C
+                </Text>
                 <LottieView
                   source={require('../../assets/animations/cloudy.json')}
                   autoPlay
@@ -116,11 +131,13 @@ export default function Home(props: Props) {
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  16:00
+                  {nextFourHours[1]}:00
                 </Text>
               </View>
               <View style={{flex: 1}}>
-                <Text style={[styles.text, {fontSize: 20}]}> 24º C</Text>
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {temperatureHourly[2]}º C
+                </Text>
                 <LottieView
                   source={require('../../assets/animations/cloud.json')}
                   autoPlay
@@ -128,11 +145,13 @@ export default function Home(props: Props) {
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  17:00
+                  {nextFourHours[2]}:00
                 </Text>
               </View>
               <View style={{flex: 1}}>
-                <Text style={[styles.text, {fontSize: 20}]}>23º C</Text>
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {temperatureHourly[3]}º C
+                </Text>
                 <LottieView
                   source={require('../../assets/animations/thunder-rain.json')}
                   autoPlay
@@ -140,7 +159,7 @@ export default function Home(props: Props) {
                   style={[styles.animationArea, {width: 50, height: 50}]}
                 />
                 <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  18:00
+                  {nextFourHours[3]}:00
                 </Text>
               </View>
             </View>

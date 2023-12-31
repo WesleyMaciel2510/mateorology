@@ -95,7 +95,7 @@ async function fetchWeatherData(): Promise<any> {
     weatherData.daily.precipitationProbabilityMax[0],
   ); */
   // ========================================================
-  const currentDate = new Date();
+  /*  const currentDate = new Date();
   const currentHour = currentDate.getHours();
   const twoDigitHour = (currentHour < 10 ? '0' : '') + currentHour;
   const index = parseInt(twoDigitHour, 10);
@@ -116,7 +116,7 @@ async function fetchWeatherData(): Promise<any> {
     }
     return arrayTemperature;
   }
-  getTemperatureHourly(index);
+  getTemperatureHourly(index); */
   // ========================================================
 
   /*

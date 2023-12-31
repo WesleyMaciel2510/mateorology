@@ -11,6 +11,8 @@ export const useStateVariables = () => {
   const [description, setDescription] = useState('');
   const [windSpeed, setWindSpeed] = useState(0);
   const [date, setDate] = useState([]);
+  const [temperatureHourly, setTemperatureHourly] = useState([]);
+  const [nextFourHours, setNextFourHours] = useState([]);
 
   return {
     humidity,
@@ -25,6 +27,10 @@ export const useStateVariables = () => {
     setWindSpeed,
     date,
     setDate,
+    temperatureHourly,
+    setTemperatureHourly,
+    nextFourHours,
+    setNextFourHours,
   };
 };
 
@@ -32,11 +38,15 @@ export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
   const {
+    temperatureHourly,
+    nextFourHours,
     setHumidity,
     setPrecipitation,
     setTemperature,
     setDescription,
     setWindSpeed,
+    setTemperatureHourly,
+    setNextFourHours,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
@@ -59,6 +69,24 @@ export const useInit = () => {
 
         setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 3));
         // TODAY AREA ===================================
+        const currentDate = new Date();
+        const currentHour = currentDate.getHours();
+        const twoDigitHour = (currentHour < 10 ? '0' : '') + currentHour;
+        const index = parseInt(twoDigitHour, 10);
+        //clean the previous data to not store unecessarry data many times
+        if (nextFourHours.length === 0) {
+          setNextFourHours([]);
+        }
+        if (temperatureHourly.length === 0) {
+          setNextFourHours([]);
+        }
+        for (let i = index; i < index + 4; i++) {
+          setTemperatureHourly(prevState => [
+            ...prevState,
+            weatherData.hourly.temperature2m[i].toString().slice(0, 2),
+          ]);
+          setNextFourHours(prevState => [...prevState, i]);
+        }
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }

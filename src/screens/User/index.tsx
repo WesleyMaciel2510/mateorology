@@ -58,7 +58,7 @@ export default function User(props: Props) {
               style={styles.iconStyle}
             />
             <Text style={styles.text}>
-              Meters Per Second {/* Miles Per Hour */}
+              Meters/Seconds {/* Miles Per Hour */}
             </Text>
             <View style={styles.alignRightView}>
               <FontAwesome5
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     paddingLeft: 10,
-    fontSize: 22,
+    fontSize: 20,
   },
   iconStyle: {
     marginHorizontal: 10,
