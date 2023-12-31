@@ -14,6 +14,11 @@ export const useStateVariables = () => {
   const [date, setDate] = useState([]);
   const [temperatureHourly, setTemperatureHourly] = useState([]);
   const [nextFourHours, setNextFourHours] = useState([]);
+  const [week, setWeek] = useState([]);
+  const [forecastTemperature, setForecastTemperature] = useState<{
+    temperature2mMin: string[];
+    temperature2mMax: string[];
+  }>({temperature2mMin: [], temperature2mMax: []});
 
   return {
     humidity,
@@ -32,6 +37,10 @@ export const useStateVariables = () => {
     setTemperatureHourly,
     nextFourHours,
     setNextFourHours,
+    week,
+    setWeek,
+    forecastTemperature,
+    setForecastTemperature,
   };
 };
 
@@ -48,6 +57,7 @@ export const useInit = () => {
     setWindSpeed,
     setTemperatureHourly,
     setNextFourHours,
+    setForecastTemperature,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
@@ -62,10 +72,10 @@ export const useInit = () => {
           weatherData.daily.temperature2mMin[0].toString().slice(0, 2),
           weatherData.daily.temperature2mMax[0].toString().slice(0, 2),
         ]);
-        console.log(
+        /* console.log(
           'Wind Speed at 10m Km/h= ',
           weatherData.current.windSpeed10m.toString().slice(0, 3),
-        );
+        ); */
 
         setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 3));
         // TODAY AREA ===================================
@@ -97,7 +107,27 @@ export const useInit = () => {
     const fetchForecast = async () => {
       try {
         const forecastData = await fetchForecastData();
-        console.log('forecastData === ', forecastData);
+        //formatting to get only the two digits of the arrays
+        const oldArrayMin = forecastData.daily.temperature2mMin;
+        const formattedArrayToMin = oldArrayMin.map((value: string) => {
+          const formattedValue = parseInt(value, 10).toString();
+          return formattedValue;
+        });
+        //console.log('formattedArrayMin === ', formattedArrayToMin);
+        // ----------------------------------------------------------
+        const oldArrayMax = forecastData.daily.temperature2mMax;
+        const formattedArrayToMax = oldArrayMax.map((value: string) => {
+          const formattedValue = parseInt(value, 10).toString();
+          return formattedValue;
+        });
+        //console.log('formattedArrayMax === ', formattedArrayToMax);
+
+        // ----------------------------------------------------------
+        const newTemperatureObject = {
+          temperature2mMin: formattedArrayToMin,
+          temperature2mMax: formattedArrayToMax,
+        };
+        setForecastTemperature(newTemperatureObject);
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
@@ -107,6 +137,7 @@ export const useInit = () => {
     // ================================================
   }, []);
   useOnGetDate();
+  useOnGetWeek();
 };
 
 export const useOnGetDate = () => {
@@ -141,4 +172,37 @@ export const useOnGetDate = () => {
 
     getCurrentDate();
   }, [setDate]);
+};
+
+export const useOnGetWeek = () => {
+  const {setWeek} = useSharedState();
+
+  const getWeekdays = () => {
+    const weekdays = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    const today = new Date();
+    const currentDayIndex = today.getDay();
+    const currentWeekdays = [];
+
+    for (let i = 0; i < 7; i++) {
+      const index = (currentDayIndex + i) % 7;
+      currentWeekdays.push(weekdays[index]);
+    }
+
+    return currentWeekdays;
+  };
+
+  useEffect(() => {
+    //console.log('chamou useOnGetWeek');
+
+    const weekDays = getWeekdays();
+    setWeek(weekDays);
+  }, [setWeek]);
 };

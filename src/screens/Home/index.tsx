@@ -19,6 +19,8 @@ export default function Home(props: Props) {
     date,
     temperatureHourly,
     nextFourHours,
+    week,
+    forecastTemperature,
   } = useSharedState();
   useInit();
   // ============================================================================
@@ -182,42 +184,35 @@ export default function Home(props: Props) {
             </View>
             <View style={styles.rowView}>
               <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> Monday</Text>
+                <Text style={[styles.text, {fontSize: 20}]}> {week[0]}</Text>
                 <LottieView
                   source={require('../../assets/animations/thunder-rain.json')}
                   style={[
                     styles.animationArea,
-                    {width: 50, height: 50, margin: 20},
+                    {width: 50, height: 50, margin: 10},
                   ]}
                 />
-                <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  {'10º     13º'}
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {forecastTemperature.temperature2mMin[0]}
+                  {'º  '}
+                  {forecastTemperature.temperature2mMax[0]}
+                  {'º  '}
                 </Text>
               </View>
               <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> Tuesday</Text>
+                <Text style={[styles.text, {fontSize: 20}]}> {week[1]}</Text>
                 <LottieView
                   source={require('../../assets/animations/sun-rain.json')}
                   style={[
                     styles.animationArea,
-                    {width: 50, height: 50, margin: 20},
+                    {width: 50, height: 50, margin: 10},
                   ]}
                 />
-                <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  {'12º     17º'}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> Wednesday</Text>
-                <LottieView
-                  source={require('../../assets/animations/sun.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 20},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                  {'15º     19º'}
+                <Text style={[styles.text, {fontSize: 20}]}>
+                  {forecastTemperature.temperature2mMin[1]}
+                  {'º  '}
+                  {forecastTemperature.temperature2mMax[1]}
+                  {'º  '}
                 </Text>
               </View>
             </View>
