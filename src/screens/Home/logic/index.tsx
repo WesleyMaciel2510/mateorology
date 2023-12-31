@@ -3,6 +3,7 @@ import {useBetween} from 'use-between';
 import {getWeatherData} from '../../../services/getWeather';
 import {getForecast} from '../../../services/getForecast';
 import fetchWeatherData from '../../../services/openMeteo/openMeteo';
+import fetchForecastData from '../../../services/openMeteo/nextForecast';
 
 export const useStateVariables = () => {
   const [humidity, setHumidity] = useState(0);
@@ -50,7 +51,6 @@ export const useInit = () => {
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
-    //fetchWeatherData();
 
     // ================================================
     const fetchOpenMeteoData = async () => {
@@ -91,29 +91,20 @@ export const useInit = () => {
         console.error('Failed to fetch weather data:', error);
       }
     };
+    // ================================================
     fetchOpenMeteoData();
     // ================================================
-
-    /* const fetchData = async () => {
+    const fetchForecast = async () => {
       try {
-        const weatherData = await getForecast();
-        //setHumidity(weatherData.main.humidity);
-        console.log('weatherData === ', weatherData);
-
-        //setPrecipitation(weatherData.main.rain);
-
-        // setTemperature([
-        //  weatherData.main.temp.toString().slice(0, 2),
-        //  weatherData.main.temp_min,
-        //  weatherData.main.temp_max,
-        //]);
-        //setDescription(weatherData.weather[0].description);
-        //setWindSpeed(weatherData.wind.speed);
+        const forecastData = await fetchForecastData();
+        console.log('forecastData === ', forecastData);
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
     };
-    fetchData(); */
+    // ================================================
+    fetchForecast();
+    // ================================================
   }, []);
   useOnGetDate();
 };
@@ -151,6 +142,3 @@ export const useOnGetDate = () => {
     getCurrentDate();
   }, [setDate]);
 };
-
-/* export const useOnAnimation = () => {
-}; */
