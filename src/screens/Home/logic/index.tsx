@@ -76,6 +76,13 @@ export const useInit = () => {
           'Wind Speed at 10m Km/h= ',
           weatherData.current.windSpeed10m.toString().slice(0, 3),
         ); */
+        setHumidity(weatherData.current.relativeHumidity2m);
+        console.log('precipitation === ', weatherData.current.precipitation);
+        console.log('rain === ', weatherData.current.rain);
+        /* console.log(
+          'precipitationSum === ',
+          weatherData.daily.precipitationSum,
+        ); */
 
         setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 3));
         // TODAY AREA ===================================

@@ -1,12 +1,31 @@
 import React from 'react';
-import {View, Text, StatusBar, ScrollView, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../routes/index';
+import {
+  useSharedState,
+  useOnHandlePress,
+  useOnToggleButtonPress,
+} from './logic';
 
 interface Props {
   navigation: any;
 }
 
+type BottomIconsNavigationProp = NavigationProp<RootStackParamList>;
+
 export default function User(props: Props) {
+  const navigation = useNavigation<BottomIconsNavigationProp>();
+
+  const {toggleButton} = useSharedState();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -14,6 +33,8 @@ export default function User(props: Props) {
       headerLeft: () => null, // Hide the back arrow
     });
   }, [props.navigation]);
+  const handlePress = useOnHandlePress();
+  const toggleButtonPress = useOnToggleButtonPress();
   // ============================================================================
   return (
     <>
@@ -42,12 +63,14 @@ export default function User(props: Props) {
             />
             <Text style={styles.text}> Celsius </Text>
             <View style={styles.alignRightView}>
-              <FontAwesome5
-                name={'toggle-on'}
-                size={40}
-                color="#fff"
-                style={styles.iconStyle}
-              />
+              <TouchableOpacity onPress={() => toggleButtonPress(0)}>
+                <FontAwesome5
+                  name={toggleButton[0] === true ? 'toggle-on' : 'toggle-off'}
+                  size={40}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={styles.simpleBar}>
@@ -61,12 +84,14 @@ export default function User(props: Props) {
               Meters/Seconds {/* Miles Per Hour */}
             </Text>
             <View style={styles.alignRightView}>
-              <FontAwesome5
-                name={'toggle-on'}
-                size={38}
-                color="#fff"
-                style={styles.iconStyle}
-              />
+              <TouchableOpacity onPress={() => toggleButtonPress(1)}>
+                <FontAwesome5
+                  name={toggleButton[1] === true ? 'toggle-on' : 'toggle-off'}
+                  size={38}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{marginVertical: 25}}>
@@ -81,12 +106,14 @@ export default function User(props: Props) {
             />
             <Text style={styles.text}> Light Mode </Text>
             <View style={styles.alignRightView}>
-              <FontAwesome5
-                name={'toggle-on'}
-                size={40}
-                color="#fff"
-                style={styles.iconStyle}
-              />
+              <TouchableOpacity onPress={() => toggleButtonPress(2)}>
+                <FontAwesome5
+                  name={toggleButton[2] === true ? 'toggle-on' : 'toggle-off'}
+                  size={40}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{marginVertical: 25}}>
@@ -129,60 +156,69 @@ export default function User(props: Props) {
           <View style={{marginVertical: 25}}>
             <Text style={{color: '#fff', fontSize: 30}}> Data Source </Text>
           </View>
-          <View style={styles.simpleBar}>
-            <FontAwesome5
-              name={'cloud-moon-rain'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
-            />
-            <Text style={styles.text}> Open Weather Map </Text>
-            <View style={styles.alignRightView}>
+          <TouchableOpacity onPress={() => handlePress(1)}>
+            <View style={styles.simpleBar}>
               <FontAwesome5
-                name={'chevron-right'}
+                name={'cloud-moon-rain'}
                 size={30}
                 color="#fff"
                 style={styles.iconStyle}
               />
+              <Text style={styles.text}> Open Weather Map </Text>
+              <View style={styles.alignRightView}>
+                <FontAwesome5
+                  name={'chevron-right'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </View>
             </View>
-          </View>
-          <View style={styles.simpleBar}>
-            <FontAwesome5
-              name={'cloud-sun'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
-            />
-            <Text style={styles.text}> Open Meteo</Text>
-            <View style={styles.alignRightView}>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => handlePress(2)}>
+            <View style={styles.simpleBar}>
               <FontAwesome5
-                name={'chevron-right'}
+                name={'cloud-sun'}
                 size={30}
                 color="#fff"
                 style={styles.iconStyle}
               />
+              <Text style={styles.text}> Open Meteo</Text>
+              <View style={styles.alignRightView}>
+                <FontAwesome5
+                  name={'chevron-right'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
+
           <View style={{marginVertical: 25}}>
             <Text style={{color: '#fff', fontSize: 30}}> Privacy </Text>
           </View>
-          <View style={styles.simpleBar}>
-            <FontAwesome5
-              name={'shield-alt'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
-            />
-            <Text style={styles.text}> Privacy Policy </Text>
-            <View style={styles.alignRightView}>
+          <TouchableOpacity onPress={() => navigation.navigate('Policy')}>
+            <View style={styles.simpleBar}>
               <FontAwesome5
-                name={'chevron-right'}
+                name={'shield-alt'}
                 size={30}
                 color="#fff"
                 style={styles.iconStyle}
               />
+              <Text style={styles.text}> Privacy Policy </Text>
+              <View style={styles.alignRightView}>
+                <FontAwesome5
+                  name={'chevron-right'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
+
           <View style={styles.simpleBar}>
             <FontAwesome5
               name={'database'}

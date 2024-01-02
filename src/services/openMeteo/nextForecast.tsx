@@ -46,13 +46,13 @@ async function fetchForecastData(): Promise<any> {
   };
 
   for (let i = 0; i < weatherData.daily.time.length; i++) {
-    console.log(
+    /* console.log(
       weatherData.daily.time[i].toISOString(),
       weatherData.daily.temperature2mMax[i],
       weatherData.daily.temperature2mMin[i],
       weatherData.daily.precipitationSum[i],
       weatherData.daily.rainSum[i],
-    );
+    ); */
     return weatherData;
   }
 }
