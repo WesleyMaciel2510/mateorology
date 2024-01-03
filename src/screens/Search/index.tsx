@@ -6,6 +6,8 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  Touchable,
+  TouchableOpacity,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
@@ -40,12 +42,6 @@ export default function Search(props: Props) {
           <Text style={styles.titleText}> Search Your City </Text>
         </View>
         <View style={styles.searchArea}>
-          <FontAwesome5
-            name={'search'}
-            size={30}
-            color="#5f9dfa"
-            style={styles.iconStyle}
-          />
           <TextInput
             style={styles.input}
             placeholder="Select Your City Here"
@@ -54,6 +50,17 @@ export default function Search(props: Props) {
             placeholderTextColor={'#5f9dfa'}
             color={'#000'}
           />
+          <TouchableOpacity
+            onPress={() => {
+              console.log('PESQUISAR');
+            }}>
+            <FontAwesome5
+              name={'search'}
+              size={30}
+              color="#5f9dfa"
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.boardArea}>
           <View style={{flexDirection: 'row', padding: 10}}>
