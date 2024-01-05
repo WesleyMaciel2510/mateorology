@@ -1,6 +1,8 @@
 import {useEffect, useState} from 'react';
-import {Linking} from 'react-native';
+import {Linking, Alert} from 'react-native';
 import {useBetween} from 'use-between';
+import {useSharedState as useSharedStateHome} from '../../Home/logic';
+import {requestLocationPermission} from '../../../services/askPermission';
 
 export const useStateVariables = () => {
   const [toggleButton, setToggleButton] = useState([true, true, true]);
@@ -68,4 +70,15 @@ export const useOnToggleButtonPress = () => {
     }
   };
   return changeToggleButton;
+};
+
+export const useOnHandleLocationDenied = () => {
+  const {locationPermission} = useSharedStateHome();
+  console.log('chamou useOnHandleLocationAccessPermission');
+  Alert.alert(
+    'Location Permission Denied',
+    'Please Grant the Permission access.',
+    [{text: 'OK', onPress: requestLocationPermission}],
+    {cancelable: false},
+  );
 };

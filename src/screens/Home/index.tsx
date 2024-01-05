@@ -14,13 +14,13 @@ export default function Home(props: Props) {
     humidity,
     precipitation,
     temperature,
-    description,
     windSpeed,
     date,
     temperatureHourly,
     nextFourHours,
     week,
     forecastTemperature,
+    position,
   } = useSharedState();
   useInit();
   // ============================================================================
@@ -67,6 +67,11 @@ export default function Home(props: Props) {
             Min.: {temperature[1]}º {'     '}Max.: {temperature[2]}º
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
+          {/* {console.log(
+            'POSITION = ',
+            position.coords.altitude,
+            position.coords.longitude,
+          )} */}
         </View>
         <View style={styles.weatherBarArea}>
           <View style={styles.simpleBar}>
@@ -99,7 +104,7 @@ export default function Home(props: Props) {
               </View>
               <View style={styles.rightTextContainer}>
                 <Text style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-                  Dec, 28
+                  {date[0]}, {date[1]}
                 </Text>
               </View>
             </View>

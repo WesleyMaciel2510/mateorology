@@ -1,11 +1,17 @@
 import {useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
-import {getWeatherData} from '../../../services/getWeather';
-import {getForecast} from '../../../services/getForecast';
 import fetchWeatherData from '../../../services/openMeteo/openMeteo';
 import fetchForecastData from '../../../services/openMeteo/nextForecast';
+import {requestLocationPermission} from '../../../services/askPermission';
+import {PermissionsAndroid} from 'react-native';
+
+type PositionType = {
+  latitude: number;
+  longitude: number;
+};
 
 export const useStateVariables = () => {
+  const [locationPermission, setLocationPermission] = useState(false);
   const [humidity, setHumidity] = useState(0);
   const [precipitation, setPrecipitation] = useState(0);
   const [temperature, setTemperature] = useState([]);
@@ -19,8 +25,11 @@ export const useStateVariables = () => {
     temperature2mMin: string[];
     temperature2mMax: string[];
   }>({temperature2mMin: [], temperature2mMax: []});
+  const [position, setPosition] = useState<PositionType | null>(null);
 
   return {
+    locationPermission,
+    setLocationPermission,
     humidity,
     setHumidity,
     precipitation,
@@ -41,6 +50,8 @@ export const useStateVariables = () => {
     setWeek,
     forecastTemperature,
     setForecastTemperature,
+    position,
+    setPosition,
   };
 };
 
@@ -48,6 +59,8 @@ export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
   const {
+    locationPermission,
+    setLocationPermission,
     temperatureHourly,
     nextFourHours,
     setHumidity,
@@ -58,14 +71,32 @@ export const useInit = () => {
     setTemperatureHourly,
     setNextFourHours,
     setForecastTemperature,
+    position,
+    setPosition,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
 
     // ================================================
+    //Asking for Permission
+    const handleLocationPermission = async () => {
+      const requestLocation = await requestLocationPermission();
+
+      if (requestLocation === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('1 @ PEGOU PERMISSAO !');
+        setLocationPermission(true);
+      }
+      if (requestLocation === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        console.log('NUNCA MAIS');
+      }
+    };
+    handleLocationPermission();
+    // ================================================
     const fetchOpenMeteoData = async () => {
       try {
         const weatherData = await fetchWeatherData();
+        console.log('2 @ PEGOU weatherData !');
+
         // TITLE  ===================================
         setTemperature([
           weatherData.current.temperature2m.toString().slice(0, 2),
@@ -77,14 +108,14 @@ export const useInit = () => {
           weatherData.current.windSpeed10m.toString().slice(0, 3),
         ); */
         setHumidity(weatherData.current.relativeHumidity2m);
-        console.log('precipitation === ', weatherData.current.precipitation);
-        console.log('rain === ', weatherData.current.rain);
+        //console.log('precipitation === ', weatherData.current.precipitation);
+        //console.log('rain === ', weatherData.current.rain);
         /* console.log(
           'precipitationSum === ',
           weatherData.daily.precipitationSum,
         ); */
 
-        setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 3));
+        setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 2));
         // TODAY AREA ===================================
         const currentDate = new Date();
         const currentHour = currentDate.getHours();
@@ -150,7 +181,7 @@ export const useInit = () => {
 export const useOnGetDate = () => {
   const {setDate} = useSharedState();
   useEffect(() => {
-    console.log('chamou useOnGetDate');
+    //console.log('chamou useOnGetDate');
     const getCurrentDate = () => {
       const currentDate = new Date();
       const day = currentDate.getDate().toString().padStart(2, '0');
@@ -207,8 +238,6 @@ export const useOnGetWeek = () => {
   };
 
   useEffect(() => {
-    //console.log('chamou useOnGetWeek');
-
     const weekDays = getWeekdays();
     setWeek(weekDays);
   }, [setWeek]);

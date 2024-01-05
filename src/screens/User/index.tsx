@@ -15,6 +15,9 @@ import {
   useOnHandlePress,
   useOnToggleButtonPress,
 } from './logic';
+import {useSharedState as useSharedStateHome} from '../Home/logic';
+import {requestLocationPermission} from '../../services/askPermission';
+import {useOnHandleLocationDenied} from '../../screens/User/logic';
 
 interface Props {
   navigation: any;
@@ -26,6 +29,8 @@ export default function User(props: Props) {
   const navigation = useNavigation<BottomIconsNavigationProp>();
 
   const {toggleButton} = useSharedState();
+  const {locationPermission} = useSharedStateHome();
+
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -33,8 +38,11 @@ export default function User(props: Props) {
       headerLeft: () => null, // Hide the back arrow
     });
   }, [props.navigation]);
+
+  // Declaring hooks
   const handlePress = useOnHandlePress();
   const toggleButtonPress = useOnToggleButtonPress();
+  //const handleLocation = useOnHandleLocationDenied();
   // ============================================================================
   return (
     <>
@@ -119,23 +127,28 @@ export default function User(props: Props) {
           <View style={{marginVertical: 25}}>
             <Text style={{color: '#fff', fontSize: 30}}> Location </Text>
           </View>
-          <View style={styles.simpleBar}>
-            <FontAwesome5
-              name={'globe'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
-            />
-            <Text style={styles.text}> Location Access</Text>
-            <View style={styles.alignRightView}>
+          <TouchableOpacity
+            onPress={locationPermission ? null : requestLocationPermission}
+            activeOpacity={locationPermission ? 0.01 : 1}>
+            <View style={styles.simpleBar}>
               <FontAwesome5
-                name={'chevron-right'}
+                name={'globe'}
                 size={30}
-                color="#fff"
+                color={locationPermission ? '#75F900' : '#fff'}
                 style={styles.iconStyle}
               />
+              <Text style={styles.text}> Location Access</Text>
+              <View style={styles.alignRightView}>
+                <FontAwesome5
+                  name={locationPermission ? 'check-square' : 'chevron-right'}
+                  size={30}
+                  color={locationPermission ? '#75F900' : '#fff'}
+                  style={styles.iconStyle}
+                />
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
+
           <View style={styles.simpleBar}>
             <FontAwesome5
               name={'thumbtack'}
