@@ -14,6 +14,7 @@ import {
   useSharedState,
   useOnHandlePress,
   useOnToggleButtonPress,
+  useOnBackgroundColor,
 } from './logic';
 import {useSharedState as useSharedStateHome} from '../Home/logic';
 import {requestLocationPermission} from '../../services/askPermission';
@@ -28,7 +29,7 @@ type BottomIconsNavigationProp = NavigationProp<RootStackParamList>;
 export default function User(props: Props) {
   const navigation = useNavigation<BottomIconsNavigationProp>();
 
-  const {toggleButton} = useSharedState();
+  const {toggleButton, primaryColor, secondaryColor} = useSharedState();
   const {locationPermission} = useSharedStateHome();
 
   // ============================================================================
@@ -47,7 +48,7 @@ export default function User(props: Props) {
   return (
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
         <View style={styles.titleArea}>
           <FontAwesome5
             name={'user'}
@@ -60,9 +61,9 @@ export default function User(props: Props) {
         <View style={{borderWidth: 1, borderColor: '#fff', width: '100%'}} />
         <View style={styles.contentArea}>
           <View style={{marginVertical: 25}}>
-            <Text style={{color: '#fff', fontSize: 30}}> Metrics </Text>
+            <Text style={{color: '#fff', fontSize: 22}}> Metrics </Text>
           </View>
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'thermometer-three-quarters'}
               size={30}
@@ -81,7 +82,7 @@ export default function User(props: Props) {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'wind'}
               size={30}
@@ -103,9 +104,9 @@ export default function User(props: Props) {
             </View>
           </View>
           <View style={{marginVertical: 25}}>
-            <Text style={{color: '#fff', fontSize: 30}}> Customization </Text>
+            <Text style={{color: '#fff', fontSize: 22}}> Customization </Text>
           </View>
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'adjust'}
               size={30}
@@ -125,12 +126,12 @@ export default function User(props: Props) {
             </View>
           </View>
           <View style={{marginVertical: 25}}>
-            <Text style={{color: '#fff', fontSize: 30}}> Location </Text>
+            <Text style={{color: '#fff', fontSize: 22}}> Location </Text>
           </View>
           <TouchableOpacity
             onPress={locationPermission ? null : requestLocationPermission}
             activeOpacity={locationPermission ? 0.01 : 1}>
-            <View style={styles.simpleBar}>
+            <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
               <FontAwesome5
                 name={'globe'}
                 size={30}
@@ -149,28 +150,30 @@ export default function User(props: Props) {
             </View>
           </TouchableOpacity>
 
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'thumbtack'}
               size={30}
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.text}> Default Location </Text>
+            <View style={{flexDirection: 'column'}}>
+              <Text style={[styles.text, {fontSize: 18}]}>
+                Default Location:
+              </Text>
+            </View>
+
             <View style={styles.alignRightView}>
-              <FontAwesome5
-                name={'chevron-right'}
-                size={30}
-                color="#fff"
-                style={styles.iconStyle}
-              />
+              <Text style={[styles.text, {fontSize: 18, bottom: 3}]}>
+                Uberaba
+              </Text>
             </View>
           </View>
           <View style={{marginVertical: 25}}>
-            <Text style={{color: '#fff', fontSize: 30}}> Data Source </Text>
+            <Text style={{color: '#fff', fontSize: 22}}> Data Source </Text>
           </View>
           <TouchableOpacity onPress={() => handlePress(1)}>
-            <View style={styles.simpleBar}>
+            <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
               <FontAwesome5
                 name={'cloud-moon-rain'}
                 size={30}
@@ -190,7 +193,7 @@ export default function User(props: Props) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => handlePress(2)}>
-            <View style={styles.simpleBar}>
+            <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
               <FontAwesome5
                 name={'cloud-sun'}
                 size={30}
@@ -210,10 +213,10 @@ export default function User(props: Props) {
           </TouchableOpacity>
 
           <View style={{marginVertical: 25}}>
-            <Text style={{color: '#fff', fontSize: 30}}> Privacy </Text>
+            <Text style={{color: '#fff', fontSize: 22}}> Privacy </Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate('Policy')}>
-            <View style={styles.simpleBar}>
+            <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
               <FontAwesome5
                 name={'shield-alt'}
                 size={30}
@@ -232,7 +235,7 @@ export default function User(props: Props) {
             </View>
           </TouchableOpacity>
 
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'database'}
               size={30}
@@ -258,7 +261,6 @@ export default function User(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: '#30acdd',
   },
   contentArea: {
     paddingHorizontal: 30,
@@ -270,7 +272,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   titleText: {
-    fontSize: 25,
+    fontSize: 22,
     color: 'white',
   },
   text: {
@@ -281,10 +283,11 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     marginHorizontal: 10,
+    alignContent: 'center',
+    alignSelf: 'center',
   },
   simpleBar: {
     flexDirection: 'row',
-    backgroundColor: '#288cc3',
     borderRadius: 15,
     padding: 20,
     marginBottom: 15,
@@ -304,5 +307,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    alignSelf: 'center',
   },
 });

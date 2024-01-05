@@ -6,7 +6,17 @@ import {requestLocationPermission} from '../../../services/askPermission';
 
 export const useStateVariables = () => {
   const [toggleButton, setToggleButton] = useState([true, true, true]);
-  return {toggleButton, setToggleButton};
+  const [primaryColor, setPrimaryColor] = useState('#30ACDD');
+  const [secondaryColor, setSecondaryColor] = useState('#288CC3');
+
+  return {
+    toggleButton,
+    setToggleButton,
+    primaryColor,
+    setPrimaryColor,
+    secondaryColor,
+    setSecondaryColor,
+  };
 };
 
 export const useSharedState = () => useBetween(useStateVariables);
@@ -17,7 +27,6 @@ export const useInit = () => {
     console.log('chamou useInit');
   }, []);
 };
-
 export const useOnHandlePress = () => {
   let url: string;
   const handlePress = (pressedItem: number) => {
@@ -30,7 +39,14 @@ export const useOnHandlePress = () => {
 };
 
 export const useOnToggleButtonPress = () => {
-  const {toggleButton, setToggleButton} = useSharedState();
+  const {
+    toggleButton,
+    setToggleButton,
+    primaryColor,
+    secondaryColor,
+    setPrimaryColor,
+    setSecondaryColor,
+  } = useSharedState();
   const changeToggleButton = (pressedItem: number) => {
     console.log('pressed Item = ', pressedItem);
     setToggleButton(prevState => {
@@ -51,6 +67,10 @@ export const useOnToggleButtonPress = () => {
     };
     const lightToDarkMode = (pressedItem: number) => {
       console.log('chamou lightToDarkMode');
+      setPrimaryColor(primaryColor === '#30ACDD' ? '#030A0D' : '#30ACDD');
+      setSecondaryColor(secondaryColor === '#288CC3' ? '#142024' : '#288CC3');
+
+      //setSecondaryColor('#0F1C21');
     };
 
     //chamar a função de acordo com o item pressionado

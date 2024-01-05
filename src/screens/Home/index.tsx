@@ -67,11 +67,6 @@ export default function Home(props: Props) {
             Min.: {temperature[1]}º {'     '}Max.: {temperature[2]}º
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
-          {/* {console.log(
-            'POSITION = ',
-            position.coords.altitude,
-            position.coords.longitude,
-          )} */}
         </View>
         <View style={styles.weatherBarArea}>
           <View style={styles.simpleBar}>
@@ -339,7 +334,8 @@ export default function Home(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: '#30acdd',
+    //backgroundColor: '#30acdd',
+    backgroundColor: '#030A0D',
   },
   titleArea: {
     flexDirection: 'row',

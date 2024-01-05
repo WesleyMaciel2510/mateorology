@@ -3,14 +3,16 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from '../routes';
+import {useSharedState} from '../screens/User/logic';
 
 type BottomIconsNavigationProp = NavigationProp<RootStackParamList>;
 
 const BottomIcons: React.FC<{}> = () => {
   const navigation = useNavigation<BottomIconsNavigationProp>();
+  const {primaryColor} = useSharedState();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: primaryColor}]}>
       <TouchableOpacity
         onPress={() => navigation.navigate('Search')}
         style={styles.iconContainer}>
@@ -35,7 +37,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
-    backgroundColor: '#30acdd',
     position: 'absolute',
     bottom: 0,
     left: 0,
