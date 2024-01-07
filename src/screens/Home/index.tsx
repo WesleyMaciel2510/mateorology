@@ -24,7 +24,7 @@ export default function Home(props: Props) {
     position,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
-  useInit();
+  //useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
