@@ -1,6 +1,7 @@
 import React from 'react';
 import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
 import {useInit, useSharedState} from './logic';
+import {useSharedState as useSharedStateUser} from '../User/logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import GreetingComponent from '../../components/greeting';
@@ -22,6 +23,7 @@ export default function Home(props: Props) {
     forecastTemperature,
     position,
   } = useSharedState();
+  const {primaryColor, secondaryColor} = useSharedStateUser();
   useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -34,7 +36,7 @@ export default function Home(props: Props) {
   return (
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
         <View style={{flex: 1}}>
           <View style={styles.titleArea}>
             <FontAwesome5
@@ -64,12 +66,12 @@ export default function Home(props: Props) {
             {temperature[0]}º
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>
-            Min.: {temperature[1]}º {'     '}Max.: {temperature[2]}º
+            Min.: {temperature[1]}º Max.: {temperature[2]}º
           </Text>
           <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
         </View>
         <View style={styles.weatherBarArea}>
-          <View style={styles.simpleBar}>
+          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
             <FontAwesome5
               name={'cloud-showers-heavy'}
               size={20}
@@ -79,18 +81,16 @@ export default function Home(props: Props) {
             <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
               {precipitation} %
             </Text>
-
             <FontAwesome5 name={'tint'} size={20} color="#fff" />
             <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
               {humidity} %
             </Text>
-
             <FontAwesome5 name={'wind'} size={20} color="#fff" />
             <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
               {windSpeed} km/h
             </Text>
           </View>
-          <View style={styles.boardArea}>
+          <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
             <View style={{flexDirection: 'row', padding: 10}}>
               <View style={styles.leftTextContainer}>
                 <Text style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
@@ -195,7 +195,7 @@ export default function Home(props: Props) {
               </View>
             </ScrollView>
           </View>
-          <View style={styles.boardArea}>
+          <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
             <View style={{flexDirection: 'row', padding: 10}}>
               <View style={styles.leftTextContainer}>
                 <Text style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
@@ -334,8 +334,6 @@ export default function Home(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    //backgroundColor: '#30acdd',
-    backgroundColor: '#030A0D',
   },
   titleArea: {
     flexDirection: 'row',
@@ -367,7 +365,6 @@ const styles = StyleSheet.create({
   },
   simpleBar: {
     flexDirection: 'row',
-    backgroundColor: '#288cc3',
     borderRadius: 15,
     padding: 20,
     marginBottom: 15,
@@ -375,7 +372,6 @@ const styles = StyleSheet.create({
   boardArea: {
     flex: 2,
     padding: 15,
-    backgroundColor: '#288cc3',
     borderRadius: 15,
     alignItems: 'stretch',
     justifyContent: 'space-between',

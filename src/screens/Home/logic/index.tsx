@@ -98,6 +98,12 @@ export const useInit = () => {
         console.log('2 @ PEGOU weatherData !');
 
         // TITLE  ===================================
+
+        console.log(
+          'TEMPERATURA = ',
+          weatherData.current.temperature2m.toString().slice(0, 2),
+        );
+
         setTemperature([
           weatherData.current.temperature2m.toString().slice(0, 2),
           weatherData.daily.temperature2mMin[0].toString().slice(0, 2),

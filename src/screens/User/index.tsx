@@ -292,16 +292,6 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 15,
   },
-  boardArea: {
-    flex: 2,
-    padding: 15,
-    backgroundColor: '#288cc3',
-    borderRadius: 15,
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    marginTop: 15,
-    paddingHorizontal: 30,
-  },
   alignRightView: {
     flex: 1,
     flexDirection: 'row',

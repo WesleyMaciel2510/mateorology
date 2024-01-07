@@ -1,17 +1,15 @@
 import {fetchWeatherApi} from 'openmeteo';
 import {getPosition} from '../../services/getPosition';
-//import 'url-search-params-polyfill';
-//import 'text-encoding';
 
 async function fetchWeatherData() {
   console.log('CHAMOU fetchWeatherData');
 
   const currentPosition = await getPosition();
   const positionLatitude: number = currentPosition.coords.latitude.toFixed(4);
-  //console.log('positionLatitude = ', positionLatitude);
+  console.log('positionLatitude = ', positionLatitude);
 
   const positionLongitude: number = currentPosition.coords.longitude.toFixed(4);
-  //console.log('positionLongitude = ', positionLongitude);
+  console.log('positionLongitude = ', positionLongitude);
 
   const params = {
     latitude: positionLatitude,

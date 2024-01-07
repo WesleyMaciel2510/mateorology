@@ -11,6 +11,7 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import {useSharedState} from './logic';
+import {useSharedState as useSharedStateUser} from '../User/logic';
 
 interface Props {
   navigation: any;
@@ -18,6 +19,8 @@ interface Props {
 
 export default function Search(props: Props) {
   const {searchText, setSearchText} = useSharedState();
+  const {primaryColor, secondaryColor} = useSharedStateUser();
+
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -30,7 +33,7 @@ export default function Search(props: Props) {
   return (
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
         <View style={styles.titleArea}>
           <FontAwesome5
             name={'map-marker-alt'}
@@ -61,7 +64,7 @@ export default function Search(props: Props) {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.boardArea}>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
@@ -103,7 +106,7 @@ export default function Search(props: Props) {
             </View>
           </View>
         </View>
-        <View style={styles.boardArea}>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
@@ -145,7 +148,7 @@ export default function Search(props: Props) {
             </View>
           </View>
         </View>
-        <View style={styles.boardArea}>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
@@ -187,7 +190,7 @@ export default function Search(props: Props) {
             </View>
           </View>
         </View>
-        <View style={styles.boardArea}>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
@@ -229,7 +232,7 @@ export default function Search(props: Props) {
             </View>
           </View>
         </View>
-        <View style={styles.boardArea}>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
@@ -279,7 +282,6 @@ export default function Search(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: '#30acdd',
     paddingHorizontal: 30,
   },
   titleArea: {
@@ -315,7 +317,6 @@ const styles = StyleSheet.create({
   boardArea: {
     flex: 2,
     padding: 15,
-    backgroundColor: '#288cc3',
     borderRadius: 20,
     alignItems: 'stretch',
     justifyContent: 'space-between',
