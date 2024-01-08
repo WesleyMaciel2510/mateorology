@@ -1,15 +1,17 @@
 import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
+import {useSharedState} from '../screens/User/logic';
 
 const GooglePlacesInput = () => {
-  Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'}); //
+  const {} = useSharedState();
+  Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'});
   const handlePress = async (data: any) => {
     try {
-      // 'details' is provided when fetchDetails = true
-      //trim to take only the name
+      //trim to take only the city name
       const cityName = data.description.split(',')[0].trim();
       console.log('NOME DA CIDADE = ', cityName);
+      // now that we have the city name, we can get the latlong
       Geocoder.from(cityName)
         .then(json => {
           var location = json.results[0].geometry.location;
@@ -19,7 +21,6 @@ const GooglePlacesInput = () => {
     } catch (error) {
       console.error('Error fetching place details:', error);
     }
-    // now that we have the city name, we can get the latlong
   };
   return (
     <GooglePlacesAutocomplete

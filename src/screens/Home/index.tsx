@@ -12,6 +12,7 @@ interface Props {
 
 export default function Home(props: Props) {
   const {
+    cityName,
     humidity,
     precipitation,
     temperature,
@@ -24,7 +25,7 @@ export default function Home(props: Props) {
     position,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
-  //useInit();
+  useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -45,7 +46,7 @@ export default function Home(props: Props) {
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.titleText}> Uberaba </Text>
+            <Text style={styles.titleText}> {cityName} </Text>
             <FontAwesome5
               name={'chevron-down'}
               size={20}

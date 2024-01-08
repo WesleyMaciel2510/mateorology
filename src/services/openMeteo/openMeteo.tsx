@@ -1,15 +1,36 @@
 import {fetchWeatherApi} from 'openmeteo';
 import {getPosition} from '../../services/getPosition';
+import Geocoder from 'react-native-geocoding';
 
 async function fetchWeatherData() {
   console.log('CHAMOU fetchWeatherData');
+  Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'});
 
   const currentPosition = await getPosition();
   const positionLatitude: number = currentPosition.coords.latitude.toFixed(4);
-  console.log('positionLatitude = ', positionLatitude);
+  //console.log('positionLatitude = ', positionLatitude);
 
   const positionLongitude: number = currentPosition.coords.longitude.toFixed(4);
-  console.log('positionLongitude = ', positionLongitude);
+  //console.log('positionLongitude = ', positionLongitude);
+  const cityInfo = await Geocoder.from(positionLatitude, positionLongitude);
+  //console.log('cityInfo = ', cityInfo);
+
+  //formatting string to get city's name from latlong
+  const address = cityInfo.results[0].formatted_address;
+  //console.log('address = ', address);
+  const firstDashIndex = address.indexOf('-');
+  const secondDashIndex = address.indexOf('-', firstDashIndex + 1);
+  const firstCommaIndex = address.indexOf(',');
+  const secondCommaIndex = address.indexOf(',', firstCommaIndex + 1);
+  const cityName = address
+    .substring(secondCommaIndex + 1, secondDashIndex)
+    .trim();
+
+  console.log('cityName = ', cityName);
+
+  // Extract the city name from the address
+  //const city = address.split(',').reverse()[1];
+  //console.log('PEGUEI O LATLONG E ESTOU DIZENDO A CIDADE = ', city);
 
   const params = {
     latitude: positionLatitude,
@@ -53,6 +74,7 @@ async function fetchWeatherData() {
 
   const weatherData = {
     current: {
+      name: cityName,
       time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
       temperature2m: current.variables(0)!.value(),
       relativeHumidity2m: current.variables(1)!.value(),

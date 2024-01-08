@@ -12,6 +12,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import {useSharedState} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
+import {useSharedState as useSharedStateHome} from '../Home/logic';
 import GooglePlacesInput from '../../components/cityAutocomplete';
 
 interface Props {
@@ -21,6 +22,7 @@ interface Props {
 export default function Search(props: Props) {
   const {searchText, setSearchText} = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
+  const {cityName, humidity, temperature} = useSharedStateHome();
 
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -54,20 +56,13 @@ export default function Search(props: Props) {
               style={[styles.iconStyle, {marginLeft: 10}]}
             />
           </TouchableOpacity>
-          {/* <TextInput
-            style={styles.input}
-            placeholder="Select Your City Here"
-            value={searchText}
-            onChangeText={text => setSearchText(text)}
-            placeholderTextColor={'#5f9dfa'}
-            color={'#000'}
-          />*/}
         </View>
+        {/* DEFAULT */}
         <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
           <View style={{flexDirection: 'row', padding: 10}}>
             <View style={styles.leftTextContainer}>
               <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
-                Uberaba
+                {cityName}
               </Text>
               <View style={styles.line}>
                 <FontAwesome5
@@ -76,7 +71,49 @@ export default function Search(props: Props) {
                   color="#fff"
                   style={styles.iconStyle}
                 />
-                <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
+                  {temperature[0]}º C
+                </Text>
+                <FontAwesome5
+                  name={'tint'}
+                  size={30}
+                  color="#fff"
+                  style={{paddingHorizontal: 15}}
+                />
+                <Text style={[styles.text, {fontSize: 22}]}> {humidity}%</Text>
+              </View>
+              <Text
+                style={[
+                  styles.text,
+                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                ]}>
+                Min.: {temperature[1]} {'    '} Max.: {temperature[2]}
+              </Text>
+            </View>
+            <View>
+              <LottieView
+                source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.leftTextContainer}>
+              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
+                {cityName ? cityName : 'Pesquise sua cidade'}
+              </Text>
+              <View style={styles.line}>
+                <FontAwesome5
+                  name={'thermometer-three-quarters'}
+                  size={30}
+                  color="#fff"
+                  style={styles.iconStyle}
+                />
+                <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
                   29º C
                 </Text>
                 <FontAwesome5
@@ -85,7 +122,7 @@ export default function Search(props: Props) {
                   color="#fff"
                   style={{paddingHorizontal: 15}}
                 />
-                <Text style={[styles.text, {fontSize: 30}]}> 90%</Text>
+                <Text style={[styles.text, {fontSize: 22}]}> 90%</Text>
               </View>
               <Text
                 style={[
@@ -98,6 +135,31 @@ export default function Search(props: Props) {
             <View>
               <LottieView
                 source={require('../../assets/animations/cloud-rain.json')}
+                style={{width: 100, height: 100}}
+                loop
+                autoPlay
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          style={[
+            styles.boardArea,
+            {
+              backgroundColor: secondaryColor,
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+            },
+          ]}>
+          <View style={{flex: 1, alignContent: 'flex-start', top: 20}}>
+            <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
+              Toque aqui para adicionar uma nova cidade
+            </Text>
+          </View>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={styles.roundedView}>
+              <LottieView
+                source={require('../../assets/animations/add.json')}
                 style={{width: 100, height: 100}}
                 loop
                 autoPlay
@@ -147,12 +209,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   boardArea: {
-    //flex: 1,
-    padding: 15,
+    padding: 10,
     borderRadius: 20,
     alignItems: 'stretch',
     justifyContent: 'space-between',
-    marginTop: 50,
+    marginTop: 15,
+  },
+  roundedView: {
+    borderWidth: 2,
+    borderColor: 'white',
+    borderRadius: 50,
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    alignSelf: 'flex-end',
   },
   leftTextContainer: {
     flex: 1,

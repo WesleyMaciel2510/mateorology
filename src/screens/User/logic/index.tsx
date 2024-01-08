@@ -8,6 +8,16 @@ export const useStateVariables = () => {
   const [toggleButton, setToggleButton] = useState([true, true, true]);
   const [primaryColor, setPrimaryColor] = useState('#30ACDD');
   const [secondaryColor, setSecondaryColor] = useState('#288CC3');
+  const [cityInfo, setCityInfo] = useState({
+    defaultCity: {
+      name: '',
+      temp: '',
+      minTemp: '',
+      maxTemp: '',
+      humidity: '',
+      code: '',
+    },
+  });
 
   return {
     toggleButton,
@@ -16,6 +26,8 @@ export const useStateVariables = () => {
     setPrimaryColor,
     secondaryColor,
     setSecondaryColor,
+    cityInfo,
+    setCityInfo,
   };
 };
 

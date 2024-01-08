@@ -2,7 +2,10 @@ import {useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
 import fetchWeatherData from '../../../services/openMeteo/openMeteo';
 import fetchForecastData from '../../../services/openMeteo/nextForecast';
-import {requestLocationPermission} from '../../../services/askPermission';
+import {
+  requestLocationPermission,
+  checkLocationPermission,
+} from '../../../services/askPermission';
 import {PermissionsAndroid} from 'react-native';
 
 type PositionType = {
@@ -12,6 +15,7 @@ type PositionType = {
 
 export const useStateVariables = () => {
   const [locationPermission, setLocationPermission] = useState(false);
+  const [cityName, setCityName] = useState('');
   const [humidity, setHumidity] = useState(0);
   const [precipitation, setPrecipitation] = useState(0);
   const [temperature, setTemperature] = useState([]);
@@ -30,6 +34,8 @@ export const useStateVariables = () => {
   return {
     locationPermission,
     setLocationPermission,
+    cityName,
+    setCityName,
     humidity,
     setHumidity,
     precipitation,
@@ -61,6 +67,7 @@ export const useInit = () => {
   const {
     locationPermission,
     setLocationPermission,
+    setCityName,
     temperatureHourly,
     nextFourHours,
     setHumidity,
@@ -78,27 +85,38 @@ export const useInit = () => {
     console.log('useInit funcionando em Home!!');
 
     // ================================================
-    //Asking for Permission
-    const handleLocationPermission = async () => {
-      const requestLocation = await requestLocationPermission();
+    //Asking for Permission only if not granted to optimize the app
+    const requestLocation = async () => {
+      const locationStatus = await requestLocationPermission();
 
-      if (requestLocation === PermissionsAndroid.RESULTS.GRANTED) {
+      if (locationStatus === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('1 @ PEGOU PERMISSAO !');
         setLocationPermission(true);
       }
-      if (requestLocation === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-        console.log('NUNCA MAIS');
+      if (locationStatus === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+        console.log('O USUÁRIO DEVE LIMPAR OS DADOS');
       }
     };
-    handleLocationPermission();
+    const checkLocation = async () => {
+      const locationStatus = await checkLocationPermission();
+      console.log('Location permission:', locationStatus);
+      if (locationStatus === false) {
+        requestLocation();
+      } else {
+        setLocationPermission(true);
+      }
+    };
+    checkLocation();
+
     // ================================================
     const fetchOpenMeteoData = async () => {
       try {
         const weatherData = await fetchWeatherData();
         console.log('2 @ PEGOU weatherData !');
+        console.log('NOOOOOOMEEE = ', weatherData.current.name);
 
         // TITLE  ===================================
-
+        setCityName(weatherData.current.name);
         console.log(
           'TEMPERATURA = ',
           weatherData.current.temperature2m.toString().slice(0, 2),

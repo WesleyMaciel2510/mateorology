@@ -13,3 +13,15 @@ export const requestLocationPermission = async () => {
     console.warn('Deu erro = ', err);
   }
 };
+
+export const checkLocationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    return granted;
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+};
