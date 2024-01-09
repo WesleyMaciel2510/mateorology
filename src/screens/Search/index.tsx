@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
-import {useSharedState} from './logic';
+import {useSharedState, useOnHandlePressedView} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
 import {useSharedState as useSharedStateHome} from '../Home/logic';
 import GooglePlacesInput from '../../components/cityAutocomplete';
@@ -20,9 +20,10 @@ interface Props {
 }
 
 export default function Search(props: Props) {
-  const {searchText, setSearchText} = useSharedState();
+  const {selectedView, setSelectedView} = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
   const {cityName, humidity, temperature} = useSharedStateHome();
+  const {handlePress} = useOnHandlePressedView();
 
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -31,6 +32,13 @@ export default function Search(props: Props) {
       headerLeft: () => null, // Hide the back arrow
     });
   }, [props.navigation]);
+  // ============================================================================
+  const borderStyles = selectedView
+    ? {
+        borderWidth: 3,
+        borderColor: 'white',
+      }
+    : null;
   // ============================================================================
 
   return (
@@ -58,39 +66,49 @@ export default function Search(props: Props) {
           </TouchableOpacity>
         </View>
         {/* DEFAULT */}
-        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
-          <View style={{flexDirection: 'row', padding: 10}}>
-            <View style={styles.leftTextContainer}>
-              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
-                {cityName}
-              </Text>
-              <View style={styles.line}>
-                <FontAwesome5
-                  name={'thermometer-three-quarters'}
-                  size={30}
-                  color="#fff"
-                  style={styles.iconStyle}
-                />
+        <TouchableOpacity onPress={() => handlePress('A')}>
+          <View
+            style={[
+              styles.boardArea,
+              {backgroundColor: secondaryColor},
+              //only shows border if it's the selected view
+              selectedView === 'A' ? borderStyles : null,
+            ]}>
+            <View style={{flexDirection: 'row', padding: 10}}>
+              <View style={styles.leftTextContainer}>
                 <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-                  {temperature[0]}º C
+                  {cityName}
                 </Text>
-                <FontAwesome5
-                  name={'tint'}
-                  size={30}
-                  color="#fff"
-                  style={{paddingHorizontal: 15}}
-                />
-                <Text style={[styles.text, {fontSize: 22}]}> {humidity}%</Text>
+                <View style={styles.line}>
+                  <FontAwesome5
+                    name={'thermometer-three-quarters'}
+                    size={30}
+                    color="#fff"
+                    style={styles.iconStyle}
+                  />
+                  <Text
+                    style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
+                    {temperature[0]}º C
+                  </Text>
+                  <FontAwesome5
+                    name={'tint'}
+                    size={30}
+                    color="#fff"
+                    style={{paddingHorizontal: 15}}
+                  />
+                  <Text style={[styles.text, {fontSize: 20}]}>
+                    {' '}
+                    {humidity}%
+                  </Text>
+                </View>
+                <Text
+                  style={[
+                    styles.text,
+                    {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                  ]}>
+                  Min.: {temperature[1]} {'    '} Max.: {temperature[2]}
+                </Text>
               </View>
-              <Text
-                style={[
-                  styles.text,
-                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
-                ]}>
-                Min.: {temperature[1]} {'    '} Max.: {temperature[2]}
-              </Text>
-            </View>
-            <View>
               <LottieView
                 source={require('../../assets/animations/cloud-rain.json')}
                 style={{width: 100, height: 100}}
@@ -99,74 +117,86 @@ export default function Search(props: Props) {
               />
             </View>
           </View>
-        </View>
-        <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
-          <View style={{flexDirection: 'row', padding: 10}}>
-            <View style={styles.leftTextContainer}>
-              <Text style={[styles.text, {fontSize: 30, fontWeight: 'bold'}]}>
-                {cityName ? cityName : 'Pesquise sua cidade'}
-              </Text>
-              <View style={styles.line}>
-                <FontAwesome5
-                  name={'thermometer-three-quarters'}
-                  size={30}
-                  color="#fff"
-                  style={styles.iconStyle}
-                />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress('B')}>
+          <View
+            style={[
+              styles.boardArea,
+              {backgroundColor: secondaryColor}, //only shows border if it's the selected view
+              selectedView === 'B' ? borderStyles : null,
+            ]}>
+            <View style={{flexDirection: 'row', padding: 10}}>
+              <View style={styles.leftTextContainer}>
                 <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-                  29º C
+                  {cityName ? cityName : 'Pesquise sua cidade'}
                 </Text>
-                <FontAwesome5
-                  name={'tint'}
-                  size={30}
-                  color="#fff"
-                  style={{paddingHorizontal: 15}}
-                />
-                <Text style={[styles.text, {fontSize: 22}]}> 90%</Text>
+                <View style={styles.line}>
+                  <FontAwesome5
+                    name={'thermometer-three-quarters'}
+                    size={30}
+                    color="#fff"
+                    style={styles.iconStyle}
+                  />
+                  <Text
+                    style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
+                    29º C
+                  </Text>
+                  <FontAwesome5
+                    name={'tint'}
+                    size={30}
+                    color="#fff"
+                    style={{paddingHorizontal: 15}}
+                  />
+                  <Text style={[styles.text, {fontSize: 22}]}> 90%</Text>
+                </View>
+                <Text
+                  style={[
+                    styles.text,
+                    {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
+                  ]}>
+                  Min.: 24 {'    '} Max.: 31
+                </Text>
               </View>
-              <Text
-                style={[
-                  styles.text,
-                  {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
-                ]}>
-                Min.: 24 {'    '} Max.: 31
+              <View>
+                <LottieView
+                  source={require('../../assets/animations/cloud-rain.json')}
+                  style={{width: 100, height: 100}}
+                  loop
+                  autoPlay
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress('C')}>
+          <View
+            style={[
+              styles.boardArea,
+              {
+                backgroundColor: secondaryColor,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              //only shows border if it's the selected view
+              selectedView === 'C' ? borderStyles : null,
+            ]}>
+            <View style={{alignContent: 'center'}}>
+              <Text style={[styles.text, {fontSize: 18, fontWeight: 'bold'}]}>
+                Adicionar nova cidade
               </Text>
             </View>
-            <View>
-              <LottieView
-                source={require('../../assets/animations/cloud-rain.json')}
-                style={{width: 100, height: 100}}
-                loop
-                autoPlay
-              />
+            <View style={{flexDirection: 'row', padding: 10}}>
+              <View style={styles.roundedView}>
+                <LottieView
+                  source={require('../../assets/animations/add.json')}
+                  style={{width: 70, height: 70}}
+                  loop
+                  autoPlay
+                />
+              </View>
             </View>
           </View>
-        </View>
-        <View
-          style={[
-            styles.boardArea,
-            {
-              backgroundColor: secondaryColor,
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-            },
-          ]}>
-          <View style={{flex: 1, alignContent: 'flex-start', top: 20}}>
-            <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-              Toque aqui para adicionar uma nova cidade
-            </Text>
-          </View>
-          <View style={{flexDirection: 'row', padding: 10}}>
-            <View style={styles.roundedView}>
-              <LottieView
-                source={require('../../assets/animations/add.json')}
-                style={{width: 100, height: 100}}
-                loop
-                autoPlay
-              />
-            </View>
-          </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -184,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   titleText: {
-    fontSize: 25,
+    fontSize: 22,
     color: 'white',
   },
   text: {

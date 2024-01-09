@@ -117,15 +117,28 @@ export const useInit = () => {
 
         // TITLE  ===================================
         setCityName(weatherData.current.name);
-        console.log(
-          'TEMPERATURA = ',
-          weatherData.current.temperature2m.toString().slice(0, 2),
+        //formatting to use one decimal number in case of temperatures below 10
+        function formatTemperatureData(temperature) {
+          const temperatureString = temperature.toString();
+          const hasDecimal = temperatureString.includes('.');
+          return hasDecimal
+            ? temperatureString.slice(0, 2).replace(/\.+$/, '')
+            : temperatureString.slice(0, 1);
+        }
+        const formattedTemperature = formatTemperatureData(
+          weatherData.current.temperature2m,
+        );
+        const formattedTempMin = formatTemperatureData(
+          weatherData.daily.temperature2mMin[0],
+        );
+        const formattedTempMax = formatTemperatureData(
+          weatherData.daily.temperature2mMax[0],
         );
 
         setTemperature([
-          weatherData.current.temperature2m.toString().slice(0, 2),
-          weatherData.daily.temperature2mMin[0].toString().slice(0, 2),
-          weatherData.daily.temperature2mMax[0].toString().slice(0, 2),
+          formattedTemperature,
+          formattedTempMin,
+          formattedTempMax,
         ]);
         /* console.log(
           'Wind Speed at 10m Km/h= ',
