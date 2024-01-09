@@ -1,29 +1,33 @@
 import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
-import {useSharedState} from '../screens/User/logic';
+import fetchNewCityData from '../services/openMeteo/searchNewCity';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
 
 const GooglePlacesInput = () => {
-  const {} = useSharedState();
-  const {selectedView} = useSharedStateSearch();
+  const {cityInfo, setCityInfo} = useSharedStateSearch();
   Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'});
   const handlePress = async (data: any) => {
+    const cityName = data.description.split(',')[0].trim();
+
     try {
-      //trim to take only the city name
-      const cityName = data.description.split(',')[0].trim();
-      //console.log('NOME DA CIDADE = ', cityName);
-      // now that we have the city name, we can get the latlong
-      Geocoder.from(cityName)
-        .then(json => {
-          var location = json.results[0].geometry.location;
-          console.log('RESULTADO DA BUSCA ======== ', location);
-        })
-        .catch(error => console.warn('Error getting location data: ', error));
+      const geocoderResult = await Geocoder.from(cityName);
+      const location = geocoderResult.results[0].geometry.location;
+      const latitude = location.lat.toFixed(2);
+      const longitude = location.lng.toFixed(2);
+
+      console.log('latitude = ', latitude, 'longitude = ', longitude);
+      try {
+        const cityData = await fetchNewCityData(latitude, longitude);
+        console.log('RESULTADO DA BUSCA DE NOVA CIDADE ==== ', cityData);
+      } catch (error) {
+        console.error('Error getting fetchNewCityData data: ', error);
+      }
     } catch (error) {
-      console.error('Error fetching place details:', error);
+      console.warn('Error getting location data: ', error);
     }
   };
+
   return (
     <GooglePlacesAutocomplete
       placeholder="Search"

@@ -28,10 +28,6 @@ async function fetchWeatherData() {
 
   console.log('cityName = ', cityName);
 
-  // Extract the city name from the address
-  //const city = address.split(',').reverse()[1];
-  //console.log('PEGUEI O LATLONG E ESTOU DIZENDO A CIDADE = ', city);
-
   const params = {
     latitude: positionLatitude,
     longitude: positionLongitude,

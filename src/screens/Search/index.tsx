@@ -3,26 +3,23 @@ import {
   View,
   Text,
   StatusBar,
-  ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import LottieView from 'lottie-react-native';
 import {useSharedState, useOnHandlePressedView} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
-import {useSharedState as useSharedStateHome} from '../Home/logic';
-import GooglePlacesInput from '../../components/cityAutocomplete';
+import GooglePlacesInput from '../../components/googlePlacesInput';
+import NewCity from '../../components/newCityBoard';
+import CityBoard from '../../components/cityBoard';
 
 interface Props {
   navigation: any;
 }
 
 export default function Search(props: Props) {
-  const {selectedView, setSelectedView} = useSharedState();
-  const {primaryColor, secondaryColor} = useSharedStateUser();
-  const {cityName, humidity, temperature} = useSharedStateHome();
+  const {selectedView} = useSharedState();
+  const {primaryColor} = useSharedStateUser();
   const {handlePress} = useOnHandlePressedView();
 
   // ============================================================================
@@ -66,136 +63,14 @@ export default function Search(props: Props) {
           </TouchableOpacity>
         </View>
         {/* DEFAULT */}
-        <TouchableOpacity onPress={() => handlePress('A')}>
-          <View
-            style={[
-              styles.boardArea,
-              {backgroundColor: secondaryColor},
-              //only shows border if it's the selected view
-              selectedView === 'A' ? borderStyles : null,
-            ]}>
-            <View style={{flexDirection: 'row', padding: 10}}>
-              <View style={styles.leftTextContainer}>
-                <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-                  {cityName}
-                </Text>
-                <View style={styles.line}>
-                  <FontAwesome5
-                    name={'thermometer-three-quarters'}
-                    size={30}
-                    color="#fff"
-                    style={styles.iconStyle}
-                  />
-                  <Text
-                    style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-                    {temperature[0]}º C
-                  </Text>
-                  <FontAwesome5
-                    name={'tint'}
-                    size={30}
-                    color="#fff"
-                    style={{paddingHorizontal: 15}}
-                  />
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {' '}
-                    {humidity}%
-                  </Text>
-                </View>
-                <Text
-                  style={[
-                    styles.text,
-                    {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
-                  ]}>
-                  Min.: {temperature[1]} {'    '} Max.: {temperature[2]}
-                </Text>
-              </View>
-              <LottieView
-                source={require('../../assets/animations/cloud-rain.json')}
-                style={{width: 100, height: 100}}
-                loop
-                autoPlay
-              />
-            </View>
-          </View>
+        <TouchableOpacity onPress={() => handlePress(0)}>
+          <CityBoard borderStyles={borderStyles} selectedBoard={'A'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('B')}>
-          <View
-            style={[
-              styles.boardArea,
-              {backgroundColor: secondaryColor}, //only shows border if it's the selected view
-              selectedView === 'B' ? borderStyles : null,
-            ]}>
-            <View style={{flexDirection: 'row', padding: 10}}>
-              <View style={styles.leftTextContainer}>
-                <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-                  {cityName ? cityName : 'Pesquise sua cidade'}
-                </Text>
-                <View style={styles.line}>
-                  <FontAwesome5
-                    name={'thermometer-three-quarters'}
-                    size={30}
-                    color="#fff"
-                    style={styles.iconStyle}
-                  />
-                  <Text
-                    style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-                    29º C
-                  </Text>
-                  <FontAwesome5
-                    name={'tint'}
-                    size={30}
-                    color="#fff"
-                    style={{paddingHorizontal: 15}}
-                  />
-                  <Text style={[styles.text, {fontSize: 22}]}> 90%</Text>
-                </View>
-                <Text
-                  style={[
-                    styles.text,
-                    {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
-                  ]}>
-                  Min.: 24 {'    '} Max.: 31
-                </Text>
-              </View>
-              <View>
-                <LottieView
-                  source={require('../../assets/animations/cloud-rain.json')}
-                  style={{width: 100, height: 100}}
-                  loop
-                  autoPlay
-                />
-              </View>
-            </View>
-          </View>
+        <TouchableOpacity onPress={() => handlePress(1)}>
+          <NewCity borderStyles={borderStyles} selectedBoard={'B'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress('C')}>
-          <View
-            style={[
-              styles.boardArea,
-              {
-                backgroundColor: secondaryColor,
-                justifyContent: 'center',
-                alignItems: 'center',
-              },
-              //only shows border if it's the selected view
-              selectedView === 'C' ? borderStyles : null,
-            ]}>
-            <View style={{alignContent: 'center'}}>
-              <Text style={[styles.text, {fontSize: 18, fontWeight: 'bold'}]}>
-                Adicionar nova cidade
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row', padding: 10}}>
-              <View style={styles.roundedView}>
-                <LottieView
-                  source={require('../../assets/animations/add.json')}
-                  style={{width: 70, height: 70}}
-                  loop
-                  autoPlay
-                />
-              </View>
-            </View>
-          </View>
+        <TouchableOpacity onPress={() => handlePress(2)}>
+          <NewCity borderStyles={borderStyles} selectedBoard={'C'} />
         </TouchableOpacity>
       </View>
     </>

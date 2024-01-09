@@ -2,21 +2,20 @@ import {SetStateAction, useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
 
 export const useStateVariables = () => {
-  const [searchText, setSearchText] = useState('');
-  const [selectedView, setSelectedView] = useState('');
+  const [selectedView, setSelectedView] = useState(0);
+  const [cityInfo, setCityInfo] = useState([{}]);
 
   return {
-    searchText,
-    setSearchText,
     selectedView,
     setSelectedView,
+    cityInfo,
+    setCityInfo,
   };
 };
 
 export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
-  const {setSearchText} = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Search!!');
   }, []);
@@ -24,7 +23,7 @@ export const useInit = () => {
 
 export const useOnHandlePressedView = () => {
   const {setSelectedView} = useSharedState();
-  const handlePress = (view: SetStateAction<string>) => {
+  const handlePress = (view: SetStateAction<number>) => {
     setSelectedView(view);
     console.log('SELECIONOU A VIEW = ', view);
   };

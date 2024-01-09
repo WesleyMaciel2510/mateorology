@@ -113,7 +113,6 @@ export const useInit = () => {
       try {
         const weatherData = await fetchWeatherData();
         console.log('2 @ PEGOU weatherData !');
-        console.log('NOOOOOOMEEE = ', weatherData.current.name);
 
         // TITLE  ===================================
         setCityName(weatherData.current.name);
