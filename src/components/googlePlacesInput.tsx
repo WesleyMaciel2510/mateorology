@@ -5,7 +5,7 @@ import fetchNewCityData from '../services/openMeteo/searchNewCity';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
 
 const GooglePlacesInput = () => {
-  const {cityInfo, setCityInfo} = useSharedStateSearch();
+  const {selectedView, setCity1, setCity2, setCity3} = useSharedStateSearch();
   Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'});
   const handlePress = async (data: any) => {
     const cityName = data.description.split(',')[0].trim();
@@ -20,6 +20,33 @@ const GooglePlacesInput = () => {
       try {
         const cityData = await fetchNewCityData(latitude, longitude);
         console.log('RESULTADO DA BUSCA DE NOVA CIDADE ==== ', cityData);
+        console.log('selectedView = ', selectedView);
+        const info = {
+          cityName: data.description.split(',')[0].trim(),
+          currentTemp: cityData.current.temperature2m.toString().slice(0, 2),
+          minTemp: cityData.daily.temperature2mMin.toString().slice(0, 2),
+          maxTemp: cityData.daily.temperature2mMax.toString().slice(0, 2),
+          humidity: cityData.current.relativeHumidity2m,
+          code: cityData.current.weatherCode,
+        };
+        switch (selectedView) {
+          case 0:
+            console.log('ARMAZENAR NA 1');
+            setCity1(info);
+            break;
+
+          case 1:
+            console.log('ARMAZENAR NA 2');
+            setCity2(info);
+            break;
+
+          case 2:
+            console.log('ARMAZENAR NA 3');
+            setCity3(info);
+            break;
+          default:
+            break;
+        }
       } catch (error) {
         console.error('Error getting fetchNewCityData data: ', error);
       }

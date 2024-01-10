@@ -18,7 +18,7 @@ interface Props {
 }
 
 export default function Search(props: Props) {
-  const {selectedView} = useSharedState();
+  const {selectedView, city1, city2, city3} = useSharedState();
   const {primaryColor} = useSharedStateUser();
   const {handlePress} = useOnHandlePressedView();
 
@@ -62,15 +62,26 @@ export default function Search(props: Props) {
             />
           </TouchableOpacity>
         </View>
-        {/* DEFAULT */}
         <TouchableOpacity onPress={() => handlePress(0)}>
-          <CityBoard borderStyles={borderStyles} selectedBoard={'A'} />
+          {Object.keys(city1).length === 0 ? (
+            <NewCity borderStyles={borderStyles} selectedBoard={0} />
+          ) : (
+            <CityBoard borderStyles={borderStyles} selectedBoard={0} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress(1)}>
-          <NewCity borderStyles={borderStyles} selectedBoard={'B'} />
+          {Object.keys(city2).length === 0 ? (
+            <NewCity borderStyles={borderStyles} selectedBoard={1} />
+          ) : (
+            <CityBoard borderStyles={borderStyles} selectedBoard={1} />
+          )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress(2)}>
-          <NewCity borderStyles={borderStyles} selectedBoard={'C'} />
+          {Object.keys(city3).length === 0 ? (
+            <NewCity borderStyles={borderStyles} selectedBoard={2} />
+          ) : (
+            <CityBoard borderStyles={borderStyles} selectedBoard={2} />
+          )}
         </TouchableOpacity>
       </View>
     </>

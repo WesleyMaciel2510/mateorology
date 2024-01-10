@@ -22,7 +22,7 @@ const NewCity = ({borderStyles, selectedBoard}) => {
       ]}>
       <View style={{alignContent: 'center'}}>
         <Text style={[styles.text, {fontSize: 18, fontWeight: 'bold'}]}>
-          Selecione e pesquise {'\n'}para adicionar nova cidade
+          Pesquise para {'\n'}adicionar nova cidade
         </Text>
       </View>
       <View style={{flexDirection: 'row', padding: 10}}>

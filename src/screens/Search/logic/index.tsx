@@ -3,13 +3,19 @@ import {useBetween} from 'use-between';
 
 export const useStateVariables = () => {
   const [selectedView, setSelectedView] = useState(0);
-  const [cityInfo, setCityInfo] = useState([{}]);
+  const [city1, setCity1] = useState({});
+  const [city2, setCity2] = useState({});
+  const [city3, setCity3] = useState({});
 
   return {
     selectedView,
     setSelectedView,
-    cityInfo,
-    setCityInfo,
+    city1,
+    setCity1,
+    city2,
+    setCity2,
+    city3,
+    setCity3,
   };
 };
 

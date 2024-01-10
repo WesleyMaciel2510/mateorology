@@ -8,8 +8,27 @@ import {useSharedState as useSharedStateUser} from '../screens/User/logic';
 
 const CityBoard = ({borderStyles, selectedBoard}) => {
   const {cityName, humidity, temperature} = useSharedStateHome();
-  const {selectedView} = useSharedStateSearch();
+  const {selectedView, city1, city2, city3} = useSharedStateSearch();
   const {secondaryColor} = useSharedStateUser();
+  // =================================================================
+  let info: {};
+  switch (selectedBoard) {
+    case 0:
+      info = city1;
+      break;
+
+    case 1:
+      info = city2;
+      break;
+
+    case 2:
+      info = city3;
+      break;
+  }
+  /* {
+    console.log('INFO = ', info);
+  } */
+  // =================================================================
 
   return (
     <View
@@ -22,7 +41,7 @@ const CityBoard = ({borderStyles, selectedBoard}) => {
       <View style={{flexDirection: 'row', padding: 10}}>
         <View style={[styles.leftTextContainer]}>
           <Text style={[styles.text, {fontSize: 22, fontWeight: 'bold'}]}>
-            {cityName}
+            {info.cityName}
           </Text>
           <View style={styles.line}>
             <FontAwesome5
@@ -32,7 +51,7 @@ const CityBoard = ({borderStyles, selectedBoard}) => {
               style={styles.iconStyle}
             />
             <Text style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-              {temperature[0]}º C
+              {info.currentTemp}º C
             </Text>
             <FontAwesome5
               name={'tint'}
@@ -40,14 +59,14 @@ const CityBoard = ({borderStyles, selectedBoard}) => {
               color="#fff"
               style={{paddingHorizontal: 15}}
             />
-            <Text style={[styles.text, {fontSize: 20}]}>{humidity}%</Text>
+            <Text style={[styles.text, {fontSize: 20}]}>{info.humidity}%</Text>
           </View>
           <Text
             style={[
               styles.text,
               {fontSize: 20, fontWeight: 'bold', paddingTop: 10},
             ]}>
-            Min.: {temperature[1]} {'  '} Max.: {temperature[2]}
+            Min.: {info.minTemp} {'  '} Max.: {info.maxTemp}
           </Text>
         </View>
         <LottieView
