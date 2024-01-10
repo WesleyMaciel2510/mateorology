@@ -62,25 +62,25 @@ export default function Search(props: Props) {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => handlePress(0)}>
-          {Object.keys(city1).length === 0 ? (
-            <NewCity borderStyles={borderStyles} selectedBoard={0} />
-          ) : (
-            <CityBoard borderStyles={borderStyles} selectedBoard={0} />
-          )}
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress(1)}>
-          {Object.keys(city2).length === 0 ? (
+          {Object.keys(city1).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={1} />
           ) : (
             <CityBoard borderStyles={borderStyles} selectedBoard={1} />
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handlePress(2)}>
-          {Object.keys(city3).length === 0 ? (
+          {Object.keys(city2).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={2} />
           ) : (
             <CityBoard borderStyles={borderStyles} selectedBoard={2} />
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handlePress(3)}>
+          {Object.keys(city3).length === 0 ? (
+            <NewCity borderStyles={borderStyles} selectedBoard={3} />
+          ) : (
+            <CityBoard borderStyles={borderStyles} selectedBoard={3} />
           )}
         </TouchableOpacity>
       </View>

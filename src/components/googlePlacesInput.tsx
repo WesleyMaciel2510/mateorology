@@ -3,6 +3,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import Geocoder from 'react-native-geocoding';
 import fetchNewCityData from '../services/openMeteo/searchNewCity';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
+import getAnimationName from '../assets/animations/getAnimationName';
 
 const GooglePlacesInput = () => {
   const {selectedView, setCity1, setCity2, setCity3} = useSharedStateSearch();
@@ -21,6 +22,7 @@ const GooglePlacesInput = () => {
         const cityData = await fetchNewCityData(latitude, longitude);
         console.log('RESULTADO DA BUSCA DE NOVA CIDADE ==== ', cityData);
         console.log('selectedView = ', selectedView);
+
         const info = {
           cityName: data.description.split(',')[0].trim(),
           currentTemp: cityData.current.temperature2m.toString().slice(0, 2),

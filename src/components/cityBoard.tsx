@@ -1,33 +1,34 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Platform} from 'react-native';
 import LottieView from 'lottie-react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {getAnimationName} from '../assets/animations/getAnimationName';
+import {animation} from '../assets/animations/index';
 import {useSharedState as useSharedStateHome} from '../screens/Home/logic';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
 import {useSharedState as useSharedStateUser} from '../screens/User/logic';
 
 const CityBoard = ({borderStyles, selectedBoard}) => {
-  const {cityName, humidity, temperature} = useSharedStateHome();
   const {selectedView, city1, city2, city3} = useSharedStateSearch();
   const {secondaryColor} = useSharedStateUser();
   // =================================================================
   let info: {};
   switch (selectedBoard) {
-    case 0:
+    case 1:
       info = city1;
       break;
 
-    case 1:
+    case 2:
       info = city2;
       break;
 
-    case 2:
+    case 3:
       info = city3;
       break;
   }
-  /* {
-    console.log('INFO = ', info);
-  } */
+  // =================================================================
+  const animationURL = getAnimationName(info.code);
+  //console.log('animationURL = ', animationURL);
   // =================================================================
 
   return (
@@ -70,7 +71,7 @@ const CityBoard = ({borderStyles, selectedBoard}) => {
           </Text>
         </View>
         <LottieView
-          source={require('../assets/animations/cloud-rain.json')}
+          source={animation.cloudRain}
           style={{width: 100, height: 100}}
           loop
           autoPlay
