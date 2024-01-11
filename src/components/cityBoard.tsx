@@ -1,10 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import LottieView from 'lottie-react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {getAnimationName} from '../assets/animations/getAnimationName';
-import {animation} from '../assets/animations/index';
-import {useSharedState as useSharedStateHome} from '../screens/Home/logic';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
 import {useSharedState as useSharedStateUser} from '../screens/User/logic';
 
@@ -71,7 +69,7 @@ const CityBoard = ({borderStyles, selectedBoard}) => {
           </Text>
         </View>
         <LottieView
-          source={animation.cloudRain}
+          source={animationURL}
           style={{width: 100, height: 100}}
           loop
           autoPlay

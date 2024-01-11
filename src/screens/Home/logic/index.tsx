@@ -19,8 +19,7 @@ export const useStateVariables = () => {
   const [humidity, setHumidity] = useState(0);
   const [precipitation, setPrecipitation] = useState(0);
   const [temperature, setTemperature] = useState([]);
-  const [description, setDescription] = useState('');
-  const [windSpeed, setWindSpeed] = useState(0);
+  const [windSpeed, setWindSpeed] = useState('');
   const [date, setDate] = useState([]);
   const [temperatureHourly, setTemperatureHourly] = useState([]);
   const [nextFourHours, setNextFourHours] = useState([]);
@@ -30,6 +29,7 @@ export const useStateVariables = () => {
     temperature2mMax: string[];
   }>({temperature2mMin: [], temperature2mMax: []});
   const [position, setPosition] = useState<PositionType | null>(null);
+  const [weatherCode, setWeatherCode] = useState(null);
 
   return {
     locationPermission,
@@ -42,8 +42,6 @@ export const useStateVariables = () => {
     setPrecipitation,
     temperature,
     setTemperature,
-    description,
-    setDescription,
     windSpeed,
     setWindSpeed,
     date,
@@ -58,6 +56,8 @@ export const useStateVariables = () => {
     setForecastTemperature,
     position,
     setPosition,
+    weatherCode,
+    setWeatherCode,
   };
 };
 
@@ -65,7 +65,6 @@ export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
   const {
-    locationPermission,
     setLocationPermission,
     setCityName,
     temperatureHourly,
@@ -73,13 +72,11 @@ export const useInit = () => {
     setHumidity,
     setPrecipitation,
     setTemperature,
-    setDescription,
     setWindSpeed,
     setTemperatureHourly,
     setNextFourHours,
     setForecastTemperature,
-    position,
-    setPosition,
+    setWeatherCode,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
@@ -133,6 +130,9 @@ export const useInit = () => {
         const formattedTempMax = formatTemperatureData(
           weatherData.daily.temperature2mMax[0],
         );
+        // ================================================
+        // filling the variables here
+        setWeatherCode(weatherData.current.weatherCode);
 
         setTemperature([
           formattedTemperature,
@@ -157,7 +157,7 @@ export const useInit = () => {
         const currentHour = currentDate.getHours();
         const twoDigitHour = (currentHour < 10 ? '0' : '') + currentHour;
         const index = parseInt(twoDigitHour, 10);
-        //clean the previous data to not store unecessarry data many times
+        //clean the previous data to not store unnecessary data many times
         if (nextFourHours.length === 0) {
           setNextFourHours([]);
         }

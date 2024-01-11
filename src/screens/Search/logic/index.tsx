@@ -2,7 +2,7 @@ import {SetStateAction, useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
 
 export const useStateVariables = () => {
-  const [selectedView, setSelectedView] = useState(0);
+  const [selectedView, setSelectedView] = useState(1);
   const [city1, setCity1] = useState({});
   const [city2, setCity2] = useState({});
   const [city3, setCity3] = useState({});

@@ -5,6 +5,7 @@ import {useSharedState as useSharedStateUser} from '../User/logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import GreetingComponent from '../../components/greeting';
+import {getAnimationName} from '../../assets/animations/getAnimationName';
 
 interface Props {
   navigation: any;
@@ -22,10 +23,10 @@ export default function Home(props: Props) {
     nextFourHours,
     week,
     forecastTemperature,
-    position,
+    weatherCode,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
-  //useInit();
+  useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
@@ -33,6 +34,8 @@ export default function Home(props: Props) {
       headerLeft: () => null, // Hide the back arrow
     });
   }, [props.navigation]);
+  // ============================================================================
+  const animationURL = getAnimationName(weatherCode);
   // ============================================================================
   return (
     <>
@@ -57,7 +60,7 @@ export default function Home(props: Props) {
         </View>
         <GreetingComponent />
         <LottieView
-          source={require('../../assets/animations/night-cloud.json')}
+          source={animationURL}
           autoPlay
           loop
           style={[styles.animationArea, {width: 150, height: 150}]}

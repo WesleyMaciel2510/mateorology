@@ -32,17 +32,17 @@ const GooglePlacesInput = () => {
           code: cityData.current.weatherCode,
         };
         switch (selectedView) {
-          case 0:
+          case 1:
             console.log('ARMAZENAR NA 1');
             setCity1(info);
             break;
 
-          case 1:
+          case 2:
             console.log('ARMAZENAR NA 2');
             setCity2(info);
             break;
 
-          case 2:
+          case 3:
             console.log('ARMAZENAR NA 3');
             setCity3(info);
             break;
