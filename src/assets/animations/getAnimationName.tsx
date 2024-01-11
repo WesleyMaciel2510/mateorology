@@ -1,10 +1,15 @@
 import {animation} from '../animations/index';
 
 // @This function is responsable for setting the Weather Animation in the Screen
-export const getAnimationName = (code: number) => {
+export const getAnimationName = (
+  code: number,
+  nextHour: number,
+  futureData: boolean,
+) => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
-  const isNight = currentHour > 6 && currentHour < 18 ? false : true;
+  const hour = futureData ? nextHour : currentHour;
+  const isNight = hour > 6 && hour < 18 ? false : true;
 
   let animationName = '';
 
@@ -13,7 +18,7 @@ export const getAnimationName = (code: number) => {
   } else if (code > 0 && code < 4) {
     animationName = isNight ? animation.nightCloud : animation.sunCloud;
   } else if (code > 4 && code < 49) {
-    animationName = animation.cloudy;
+    animationName = isNight ? animation.nightCloud : animation.cloud;
   } else if (code > 49 && code < 60) {
     animationName = isNight ? animation.nightRain : animation.sunRain;
   } else if (code > 60 && code < 68) {

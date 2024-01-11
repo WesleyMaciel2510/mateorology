@@ -6,6 +6,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
 import GreetingComponent from '../../components/greeting';
 import {getAnimationName} from '../../assets/animations/getAnimationName';
+import TodayColumn from '../../components/todayColumn';
 
 interface Props {
   navigation: any;
@@ -16,12 +17,10 @@ export default function Home(props: Props) {
     cityName,
     description,
     humidity,
-    precipitation,
+    rain,
     temperature,
     windSpeed,
     date,
-    temperatureHourly,
-    nextFourHours,
     week,
     forecastTemperature,
     weatherCode,
@@ -36,7 +35,7 @@ export default function Home(props: Props) {
     });
   }, [props.navigation]);
   // ============================================================================
-  const animationURL = getAnimationName(weatherCode);
+  const animationURL = getAnimationName(weatherCode, null, false);
   // ============================================================================
   return (
     <>
@@ -89,7 +88,7 @@ export default function Home(props: Props) {
                 style={{marginLeft: 10}}
               />
               <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
-                {precipitation} %
+                {rain} %
               </Text>
             </View>
 
@@ -122,95 +121,30 @@ export default function Home(props: Props) {
               </View>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.columnView}>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[0]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/sun.json')}
-                    autoPlay
-                    loop
-                    style={[
-                      styles.animationArea,
-                      {width: 50, height: 50, margin: 20},
-                    ]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[0]}:00
-                  </Text>
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[1]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/cloudy.json')}
-                    autoPlay
-                    loop
-                    style={[styles.animationArea, {width: 50, height: 50}]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[1]}:00
-                  </Text>
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[2]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/cloud.json')}
-                    autoPlay
-                    loop
-                    style={[styles.animationArea, {width: 50, height: 50}]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[2]}:00
-                  </Text>
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[3]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/thunder-rain.json')}
-                    autoPlay
-                    loop
-                    style={[styles.animationArea, {width: 50, height: 50}]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[3]}:00
-                  </Text>
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[4]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/thunder-rain.json')}
-                    autoPlay
-                    loop
-                    style={[styles.animationArea, {width: 50, height: 50}]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[3]}:00
-                  </Text>
-                </View>
-                <View style={{flex: 1}}>
-                  <Text style={[styles.text, {fontSize: 20}]}>
-                    {temperatureHourly[3]}º C
-                  </Text>
-                  <LottieView
-                    source={require('../../assets/animations/thunder-rain.json')}
-                    autoPlay
-                    loop
-                    style={[styles.animationArea, {width: 50, height: 50}]}
-                  />
-                  <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-                    {nextFourHours[3]}:00
-                  </Text>
-                </View>
-              </View>
+              <TodayColumn index={0} />
+              <TodayColumn index={1} />
+              <TodayColumn index={2} />
+              <TodayColumn index={3} />
+              <TodayColumn index={4} />
+              <TodayColumn index={5} />
+              <TodayColumn index={6} />
+              <TodayColumn index={7} />
+              <TodayColumn index={8} />
+              <TodayColumn index={9} />
+              <TodayColumn index={10} />
+              <TodayColumn index={11} />
+              <TodayColumn index={12} />
+              <TodayColumn index={13} />
+              <TodayColumn index={14} />
+              <TodayColumn index={15} />
+              <TodayColumn index={16} />
+              <TodayColumn index={17} />
+              <TodayColumn index={18} />
+              <TodayColumn index={19} />
+              <TodayColumn index={20} />
+              <TodayColumn index={21} />
+              <TodayColumn index={22} />
+              <TodayColumn index={23} />
             </ScrollView>
           </View>
           <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>

@@ -23,23 +23,19 @@ async function fetchWeatherData() {
 
   //const cityName = cityInfo.results[0]?.address_components[3]?.short_name;
 
-  console.log('cityName = ', cityName);
+  console.log('@openMeteo@ cityName = ', cityName);
 
   const params = {
-    //passing Uberaba's latlong for testing
-    latitude: '-19.7483',
-    longitude: '-47.9319',
-    //latitude: positionLatitude,
-    //longitude: positionLongitude,
+    latitude: positionLatitude,
+    longitude: positionLongitude,
     current: [
       'temperature_2m',
       'relative_humidity_2m',
-      'precipitation',
       'rain',
       'weather_code',
       'wind_speed_10m',
     ],
-    hourly: 'temperature_2m',
+    hourly: ['temperature_2m', 'weather_code'],
     daily: ['temperature_2m_max', 'temperature_2m_min'],
     timezone: 'America/Sao_Paulo',
     forecast_days: 1,
@@ -65,7 +61,6 @@ async function fetchWeatherData() {
       time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
       temperature2m: current.variables(0)!.value(),
       relativeHumidity2m: current.variables(1)!.value(),
-      precipitation: current.variables(2)!.value(),
       rain: current.variables(3)!.value(),
       weatherCode: current.variables(4)!.value(),
       windSpeed10m: current.variables(5)!.value(),
@@ -77,6 +72,7 @@ async function fetchWeatherData() {
         hourly.interval(),
       ).map(t => new Date((t + utcOffsetSeconds) * 1000)),
       temperature2m: hourly.variables(0)!.valuesArray()!,
+      weatherCode: hourly.variables(1)!.valuesArray()!,
     },
     daily: {
       time: range(

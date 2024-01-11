@@ -19,12 +19,13 @@ export const useStateVariables = () => {
   const [cityName, setCityName] = useState('');
   const [description, setDescription] = useState('');
   const [humidity, setHumidity] = useState(0);
-  const [precipitation, setPrecipitation] = useState(0);
+  const [rain, setRain] = useState(0);
   const [temperature, setTemperature] = useState([]);
   const [windSpeed, setWindSpeed] = useState('');
   const [date, setDate] = useState([]);
   const [temperatureHourly, setTemperatureHourly] = useState([]);
-  const [nextFourHours, setNextFourHours] = useState([]);
+  const [weatherCodeHourly, setWeatherCodeHourly] = useState([]);
+  const [nextHours, setNextHours] = useState([]);
   const [week, setWeek] = useState([]);
   const [forecastTemperature, setForecastTemperature] = useState<{
     temperature2mMin: string[];
@@ -42,8 +43,8 @@ export const useStateVariables = () => {
     setDescription,
     humidity,
     setHumidity,
-    precipitation,
-    setPrecipitation,
+    rain,
+    setRain,
     temperature,
     setTemperature,
     windSpeed,
@@ -52,8 +53,10 @@ export const useStateVariables = () => {
     setDate,
     temperatureHourly,
     setTemperatureHourly,
-    nextFourHours,
-    setNextFourHours,
+    weatherCodeHourly,
+    setWeatherCodeHourly,
+    nextHours,
+    setNextHours,
     week,
     setWeek,
     forecastTemperature,
@@ -72,16 +75,15 @@ export const useInit = () => {
     setLocationPermission,
     setCityName,
     setDescription,
-    temperatureHourly,
-    nextFourHours,
+    setTemperatureHourly,
+    setNextHours,
     setHumidity,
-    setPrecipitation,
+    setRain,
     setTemperature,
     setWindSpeed,
-    setTemperatureHourly,
-    setNextFourHours,
     setForecastTemperature,
     setWeatherCode,
+    setWeatherCodeHourly,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
@@ -118,68 +120,50 @@ export const useInit = () => {
 
         // TITLE  ===================================
         setCityName(weatherData.current.name);
-        //formatting to use one decimal number in case of temperatures below 10
-        function formatTemperatureData(temperature) {
-          const temperatureString = temperature.toString();
-          const hasDecimal = temperatureString.includes('.');
-          return hasDecimal
-            ? temperatureString.slice(0, 2).replace(/\.+$/, '')
-            : temperatureString.slice(0, 1);
-        }
-        const formattedTemperature = formatTemperatureData(
-          weatherData.current.temperature2m,
-        );
-        const formattedTempMin = formatTemperatureData(
-          weatherData.daily.temperature2mMin[0],
-        );
-        const formattedTempMax = formatTemperatureData(
-          weatherData.daily.temperature2mMax[0],
-        );
-        // ================================================
-        // filling the variables here
-        setWeatherCode(weatherData.current.weatherCode);
+        setWeatherCode(Math.floor(weatherData.current.weatherCode));
         const weatherDescription = getDescription(
           weatherData.current.weatherCode,
         );
         setDescription(weatherDescription);
-
-        setTemperature([
-          formattedTemperature,
-          formattedTempMin,
-          formattedTempMax,
-        ]);
-        /* console.log(
-          'Wind Speed at 10m Km/h= ',
-          weatherData.current.windSpeed10m.toString().slice(0, 3),
-        ); */
+        const formattedValues = [
+          weatherData.current.temperature2m,
+          weatherData.daily.temperature2mMin[0],
+          weatherData.daily.temperature2mMax[0],
+        ].map(value => Math.floor(value));
+        setTemperature(formattedValues);
         setHumidity(weatherData.current.relativeHumidity2m);
-        //console.log('precipitation === ', weatherData.current.precipitation);
-        //console.log('rain === ', weatherData.current.rain);
-        /* console.log(
-          'precipitationSum === ',
-          weatherData.daily.precipitationSum,
-        ); */
-
+        setRain(weatherData.current.rain);
         setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 2));
         // TODAY AREA ===================================
-        const currentDate = new Date();
-        const currentHour = currentDate.getHours();
-        const twoDigitHour = (currentHour < 10 ? '0' : '') + currentHour;
-        const index = parseInt(twoDigitHour, 10);
-        //clean the previous data to not store unnecessary data many times
-        if (nextFourHours.length === 0) {
-          setNextFourHours([]);
+        // Creating a new array that gets the next hours
+        const currentHour = new Date().getHours();
+        const hours = [];
+        for (let i = 0; i < 24; i++) {
+          const nextHour = (currentHour + i) % 24;
+          const formattedHour =
+            nextHour > -1 && nextHour < 10 ? `0${nextHour}` : String(nextHour);
+          hours.push(formattedHour);
         }
-        if (temperatureHourly.length === 0) {
-          setNextFourHours([]);
-        }
-        for (let i = index; i < index + 4; i++) {
-          setTemperatureHourly(prevState => [
-            ...prevState,
-            weatherData.hourly.temperature2m[i].toString().slice(0, 2),
-          ]);
-          setNextFourHours(prevState => [...prevState, i]);
-        }
+        //console.log('HORAS = ', hours);
+
+        setNextHours(hours);
+        //formatting all the temperatures to get two decimal places
+        const formattedArray = Array.from(weatherData.hourly.temperature2m).map(
+          value => Math.floor(value),
+        );
+        setTemperatureHourly(formattedArray);
+        /* console.log(
+          'TEMPERATURAS = ',
+          weatherData.hourly.temperature2m.map(value => Math.floor(value)),
+        ); */
+        setWeatherCodeHourly(Array.from(weatherData.hourly.weatherCode));
+        //console.log('CODES HOURLY = ', weatherData.hourly.weatherCode);
+
+        /* for (let i = 0; i < weatherData.hourly.time.length; i++) {
+          console.log('TEMPO = ', weatherData.hourly.time[i]);
+        } */
+
+        // =============================================
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
