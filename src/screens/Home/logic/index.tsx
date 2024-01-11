@@ -7,6 +7,7 @@ import {
   checkLocationPermission,
 } from '../../../services/askPermission';
 import {PermissionsAndroid} from 'react-native';
+import {getDescription} from '../../../components/getDescription';
 
 type PositionType = {
   latitude: number;
@@ -16,6 +17,7 @@ type PositionType = {
 export const useStateVariables = () => {
   const [locationPermission, setLocationPermission] = useState(false);
   const [cityName, setCityName] = useState('');
+  const [description, setDescription] = useState('');
   const [humidity, setHumidity] = useState(0);
   const [precipitation, setPrecipitation] = useState(0);
   const [temperature, setTemperature] = useState([]);
@@ -36,6 +38,8 @@ export const useStateVariables = () => {
     setLocationPermission,
     cityName,
     setCityName,
+    description,
+    setDescription,
     humidity,
     setHumidity,
     precipitation,
@@ -67,6 +71,7 @@ export const useInit = () => {
   const {
     setLocationPermission,
     setCityName,
+    setDescription,
     temperatureHourly,
     nextFourHours,
     setHumidity,
@@ -133,6 +138,10 @@ export const useInit = () => {
         // ================================================
         // filling the variables here
         setWeatherCode(weatherData.current.weatherCode);
+        const weatherDescription = getDescription(
+          weatherData.current.weatherCode,
+        );
+        setDescription(weatherDescription);
 
         setTemperature([
           formattedTemperature,

@@ -14,6 +14,7 @@ interface Props {
 export default function Home(props: Props) {
   const {
     cityName,
+    description,
     humidity,
     precipitation,
     temperature,
@@ -69,31 +70,44 @@ export default function Home(props: Props) {
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
             {temperature[0]}º
           </Text>
-          <Text style={[styles.text, {fontSize: 20}]}>
+          <Text style={[styles.text, {fontSize: 23}]}>
             Min.: {temperature[1]}º Max.: {temperature[2]}º
           </Text>
-          <Text style={[styles.text, {fontSize: 20}]}>Precipitations</Text>
+          <Text style={[styles.text, {fontSize: 23}]}>{description}</Text>
         </View>
         <View style={styles.weatherBarArea}>
-          <View style={[styles.simpleBar, {backgroundColor: secondaryColor}]}>
-            <FontAwesome5
-              name={'cloud-showers-heavy'}
-              size={20}
-              color="#fff"
-              style={{marginLeft: 20}}
-            />
-            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
-              {precipitation} %
-            </Text>
-            <FontAwesome5 name={'tint'} size={20} color="#fff" />
-            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
-              {humidity} %
-            </Text>
-            <FontAwesome5 name={'wind'} size={20} color="#fff" />
-            <Text style={[styles.text, {paddingHorizontal: 10, fontSize: 20}]}>
-              {windSpeed} km/h
-            </Text>
+          <View
+            style={[
+              styles.simpleBar,
+              {backgroundColor: secondaryColor, flexDirection: 'row'},
+            ]}>
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <FontAwesome5
+                name={'cloud-showers-heavy'}
+                size={20}
+                color="#fff"
+                style={{marginLeft: 10}}
+              />
+              <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                {precipitation} %
+              </Text>
+            </View>
+
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <FontAwesome5 name={'tint'} size={20} color="#fff" />
+              <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                {humidity} %
+              </Text>
+            </View>
+
+            <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+              <FontAwesome5 name={'wind'} size={20} color="#fff" />
+              <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                {windSpeed} km/h
+              </Text>
+            </View>
           </View>
+
           <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
             <View style={{flexDirection: 'row', padding: 10}}>
               <View style={styles.leftTextContainer}>
