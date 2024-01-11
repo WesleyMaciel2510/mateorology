@@ -1,6 +1,6 @@
 import {animation} from '../animations/index';
 
-// @This function is responsable to set the Weather Animation in the Screen
+// @This function is responsable for setting the Weather Animation in the Screen
 export const getAnimationName = (code: number) => {
   const currentTime = new Date();
   const currentHour = currentTime.getHours();

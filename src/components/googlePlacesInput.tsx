@@ -3,13 +3,13 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import Geocoder from 'react-native-geocoding';
 import fetchNewCityData from '../services/openMeteo/searchNewCity';
 import {useSharedState as useSharedStateSearch} from '../screens/Search/logic';
-import getAnimationName from '../assets/animations/getAnimationName';
 
 const GooglePlacesInput = () => {
   const {selectedView, setCity1, setCity2, setCity3} = useSharedStateSearch();
   Geocoder.init('AIzaSyAJUuqlYBMZ16g8R2nSQdS2dbisXqfKcpI', {language: 'en'});
   const handlePress = async (data: any) => {
     const cityName = data.description.split(',')[0].trim();
+    //console.log(' cityName = ', cityName);
 
     try {
       const geocoderResult = await Geocoder.from(cityName);
@@ -17,11 +17,11 @@ const GooglePlacesInput = () => {
       const latitude = location.lat.toFixed(2);
       const longitude = location.lng.toFixed(2);
 
-      console.log('latitude = ', latitude, 'longitude = ', longitude);
+      //console.log('latitude = ', latitude, 'longitude = ', longitude);
       try {
         const cityData = await fetchNewCityData(latitude, longitude);
-        console.log('RESULTADO DA BUSCA DE NOVA CIDADE ==== ', cityData);
-        console.log('selectedView = ', selectedView);
+        //console.log('RESULTADO DA BUSCA DE NOVA CIDADE ==== ', cityData);
+        //console.log('selectedView = ', selectedView);
 
         const info = {
           cityName: data.description.split(',')[0].trim(),
@@ -33,17 +33,18 @@ const GooglePlacesInput = () => {
         };
         switch (selectedView) {
           case 1:
-            console.log('ARMAZENAR NA 1');
+            //console.log('ARMAZENAR NA 1');
             setCity1(info);
             break;
 
           case 2:
-            console.log('ARMAZENAR NA 2');
+            //console.log('ARMAZENAR NA 2');
             setCity2(info);
+            //console.log('CODE = ', info.code);
             break;
 
           case 3:
-            console.log('ARMAZENAR NA 3');
+            //console.log('ARMAZENAR NA 3');
             setCity3(info);
             break;
           default:

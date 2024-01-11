@@ -20,11 +20,7 @@ const NewCity = ({borderStyles, selectedBoard}) => {
         // only shows border if it's the selected view
         selectedView === selectedBoard ? borderStyles : null,
       ]}>
-      <View style={{alignContent: 'center'}}>
-        <Text style={[styles.text, {fontSize: 18, fontWeight: 'bold'}]}>
-          Pesquise para {'\n'}adicionar nova cidade
-        </Text>
-      </View>
+      <View style={{alignContent: 'center'}}></View>
       <View style={{flexDirection: 'row', padding: 10}}>
         <View style={styles.roundedView}>
           <LottieView

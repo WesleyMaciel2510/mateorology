@@ -13,24 +13,24 @@ async function fetchWeatherData() {
   const positionLongitude: number = currentPosition.coords.longitude.toFixed(4);
   //console.log('positionLongitude = ', positionLongitude);
   const cityInfo = await Geocoder.from(positionLatitude, positionLongitude);
-  //console.log('cityInfo = ', cityInfo);
+  const cityComponent = cityInfo.results[0]?.address_components.find(
+    component => component.types.includes('locality'),
+  );
+  // I setted two different ways of getting city's name in case the first fails
+  const cityName = cityComponent
+    ? cityComponent.long_name
+    : cityInfo.results[0]?.address_components[3]?.short_name;
 
-  //formatting string to get city's name from latlong
-  const address = cityInfo.results[0].formatted_address;
-  //console.log('address = ', address);
-  const firstDashIndex = address.indexOf('-');
-  const secondDashIndex = address.indexOf('-', firstDashIndex + 1);
-  const firstCommaIndex = address.indexOf(',');
-  const secondCommaIndex = address.indexOf(',', firstCommaIndex + 1);
-  const cityName = address
-    .substring(secondCommaIndex + 1, secondDashIndex)
-    .trim();
+  //const cityName = cityInfo.results[0]?.address_components[3]?.short_name;
 
   console.log('cityName = ', cityName);
 
   const params = {
-    latitude: positionLatitude,
-    longitude: positionLongitude,
+    //passing Uberaba's latlong for testing
+    latitude: '-19.7483',
+    longitude: '-47.9319',
+    //latitude: positionLatitude,
+    //longitude: positionLongitude,
     current: [
       'temperature_2m',
       'relative_humidity_2m',

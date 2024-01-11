@@ -2,7 +2,6 @@ import {fetchWeatherApi} from 'openmeteo';
 
 async function fetchNewCityData(positionLatitude, positionLongitude) {
   console.log('CHAMOU fetchNewCityData');
-  console.log('COORDENADAS');
   console.log('LAT = ', positionLatitude);
   console.log('LONG = ', positionLongitude);
 

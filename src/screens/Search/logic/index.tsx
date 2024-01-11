@@ -31,7 +31,6 @@ export const useOnHandlePressedView = () => {
   const {setSelectedView} = useSharedState();
   const handlePress = (view: SetStateAction<number>) => {
     setSelectedView(view);
-    console.log('SELECIONOU A VIEW = ', view);
   };
   return {handlePress};
 };

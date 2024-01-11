@@ -19,6 +19,7 @@ const GreetingComponent = () => {
 
   useEffect(() => {
     const userGreeting = getGreeting();
+
     setGreeting(userGreeting);
   }, []);
 

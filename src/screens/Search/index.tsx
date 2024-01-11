@@ -62,6 +62,15 @@ export default function Search(props: Props) {
             />
           </TouchableOpacity>
         </View>
+        <View>
+          <Text
+            style={[
+              styles.text,
+              {paddingVertical: 20, fontSize: 18, fontWeight: 'bold'},
+            ]}>
+            Search to add a new city
+          </Text>
+        </View>
         <TouchableOpacity onPress={() => handlePress(1)}>
           {Object.keys(city1).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={1} />
