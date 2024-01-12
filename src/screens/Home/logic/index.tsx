@@ -7,7 +7,7 @@ import {
   requestLocationPermission,
   checkLocationPermission,
 } from '../../../services/askPermission';
-import {PermissionsAndroid, TextComponent} from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 import {getDescription} from '../../../components/getDescription';
 import {getPosition} from '../../../services/getPosition';
 import {getCityName} from '../../../services/getCityName';
@@ -200,6 +200,7 @@ export const useInit = () => {
         await requestCurrentPosition();
 
       fetchCurrent(positionLatitude, positionLongitude);
+      //gets the day, if the day is the same, do not call these two again
       fetchHourly(positionLatitude, positionLongitude);
       fetchForecast(positionLatitude, positionLongitude);
     };

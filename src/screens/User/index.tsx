@@ -14,11 +14,9 @@ import {
   useSharedState,
   useOnHandlePress,
   useOnToggleButtonPress,
-  useOnBackgroundColor,
 } from './logic';
 import {useSharedState as useSharedStateHome} from '../Home/logic';
 import {requestLocationPermission} from '../../services/askPermission';
-import {useOnHandleLocationDenied} from '../../screens/User/logic';
 
 interface Props {
   navigation: any;
@@ -29,7 +27,8 @@ type BottomIconsNavigationProp = NavigationProp<RootStackParamList>;
 export default function User(props: Props) {
   const navigation = useNavigation<BottomIconsNavigationProp>();
 
-  const {toggleButton, primaryColor, secondaryColor} = useSharedState();
+  const {toggleButton, primaryColor, secondaryColor, tempUnit, windSpeedUnit} =
+    useSharedState();
   const {locationPermission, cityName} = useSharedStateHome();
 
   // ============================================================================
@@ -70,7 +69,7 @@ export default function User(props: Props) {
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.text}> Celsius </Text>
+            <Text style={styles.text}> {tempUnit} </Text>
             <View style={styles.alignRightView}>
               <TouchableOpacity onPress={() => toggleButtonPress(0)}>
                 <FontAwesome5
@@ -89,9 +88,7 @@ export default function User(props: Props) {
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.text}>
-              Meters/Seconds {/* Miles Per Hour */}
-            </Text>
+            <Text style={styles.text}>{windSpeedUnit}</Text>
             <View style={styles.alignRightView}>
               <TouchableOpacity onPress={() => toggleButtonPress(1)}>
                 <FontAwesome5
