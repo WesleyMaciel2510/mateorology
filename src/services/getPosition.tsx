@@ -1,9 +1,16 @@
 import Geolocation from '@react-native-community/geolocation';
-
-export const getPosition = () => {
+type Position = {
+  positionLatitude: string;
+  positionLongitude: string;
+};
+export const getPosition = (): Promise<Position> => {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
-      position => resolve(position),
+      position => {
+        const positionLatitude = position.coords.latitude.toFixed(4);
+        const positionLongitude = position.coords.longitude.toFixed(4);
+        resolve({positionLatitude, positionLongitude});
+      },
       error => reject(error),
     );
   });

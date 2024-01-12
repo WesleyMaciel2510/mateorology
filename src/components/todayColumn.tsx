@@ -5,14 +5,14 @@ import {useSharedState} from '../screens/Home/logic';
 import {getAnimationName} from '../assets/animations/getAnimationName';
 
 const TodayColumn = ({index}) => {
-  const {temperatureHourly, nextHours, weatherCodeHourly} = useSharedState();
+  const {temperatureHourly, hour, weatherCodeHourly} = useSharedState();
   // =================================================================
   // if 'futureData' is false, animation gets the currentTime,
   // else it gets the hour that it needs to set day-night
-  //code, futureData, nextHours
+  //code, futureData, hours
   const animationURL = getAnimationName(
     weatherCodeHourly[index],
-    nextHours[index],
+    hour[index],
     true,
   );
   //console.log('COLUMN CODE = ', weatherCodeHourly[index]);
@@ -31,7 +31,7 @@ const TodayColumn = ({index}) => {
           style={[styles.animationArea, {width: 50, height: 50, margin: 12}]}
         />
         <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-          {nextHours[index]}:00
+          {hour[index]}:00 {/* {index}:00 */}
         </Text>
       </View>
     </View>

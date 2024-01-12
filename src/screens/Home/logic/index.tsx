@@ -1,13 +1,16 @@
 import {useEffect, useState} from 'react';
 import {useBetween} from 'use-between';
-import fetchWeatherData from '../../../services/openMeteo/openMeteo';
+import fetchCurrentData from '../../../services/openMeteo/currentData';
+import fetchHourlyData from '../../../services/openMeteo/hourlyData';
 import fetchForecastData from '../../../services/openMeteo/nextForecast';
 import {
   requestLocationPermission,
   checkLocationPermission,
 } from '../../../services/askPermission';
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, TextComponent} from 'react-native';
 import {getDescription} from '../../../components/getDescription';
+import {getPosition} from '../../../services/getPosition';
+import {getCityName} from '../../../services/getCityName';
 
 type PositionType = {
   latitude: number;
@@ -20,19 +23,22 @@ export const useStateVariables = () => {
   const [description, setDescription] = useState('');
   const [humidity, setHumidity] = useState(0);
   const [rain, setRain] = useState(0);
-  const [temperature, setTemperature] = useState([]);
+  const [temperature, setTemperature] = useState(0);
   const [windSpeed, setWindSpeed] = useState('');
   const [date, setDate] = useState([]);
   const [temperatureHourly, setTemperatureHourly] = useState([]);
   const [weatherCodeHourly, setWeatherCodeHourly] = useState([]);
-  const [nextHours, setNextHours] = useState([]);
+  const [weatherCodeDaily, setWeatherCodeDaily] = useState([]);
+  const [hour, setHour] = useState([]);
   const [week, setWeek] = useState([]);
-  const [forecastTemperature, setForecastTemperature] = useState<{
-    temperature2mMin: string[];
-    temperature2mMax: string[];
-  }>({temperature2mMin: [], temperature2mMax: []});
+  const [forecastTemperature, setForecastTemperature] = useState({
+    tempMin: [] as number[],
+    tempMax: [] as number[],
+  });
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
+  const [temperatureUnit, setTemperatureUnit] = useState('');
+  const [windSpeedUnit, setWindSpeedUnit] = useState('');
 
   return {
     locationPermission,
@@ -55,8 +61,10 @@ export const useStateVariables = () => {
     setTemperatureHourly,
     weatherCodeHourly,
     setWeatherCodeHourly,
-    nextHours,
-    setNextHours,
+    weatherCodeDaily,
+    setWeatherCodeDaily,
+    hour,
+    setHour,
     week,
     setWeek,
     forecastTemperature,
@@ -65,6 +73,10 @@ export const useStateVariables = () => {
     setPosition,
     weatherCode,
     setWeatherCode,
+    temperatureUnit,
+    setTemperatureUnit,
+    windSpeedUnit,
+    setWindSpeedUnit,
   };
 };
 
@@ -76,7 +88,7 @@ export const useInit = () => {
     setCityName,
     setDescription,
     setTemperatureHourly,
-    setNextHours,
+    setHour,
     setHumidity,
     setRain,
     setTemperature,
@@ -84,6 +96,7 @@ export const useInit = () => {
     setForecastTemperature,
     setWeatherCode,
     setWeatherCodeHourly,
+    setWeatherCodeDaily,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
@@ -111,97 +124,86 @@ export const useInit = () => {
       }
     };
     checkLocation();
-
     // ================================================
-    const fetchOpenMeteoData = async () => {
+    const fetchCurrent = async (
+      lat: Geocoder.fromParams,
+      long: Geocoder.fromParams,
+    ) => {
       try {
-        const weatherData = await fetchWeatherData();
-        console.log('2 @ PEGOU weatherData !');
+        const {current} = await fetchCurrentData(lat, long);
 
-        // TITLE  ===================================
-        setCityName(weatherData.current.name);
-        setWeatherCode(Math.floor(weatherData.current.weatherCode));
-        const weatherDescription = getDescription(
-          weatherData.current.weatherCode,
-        );
+        // TITLE AREA ===================================
+        setTemperature(current.temperature2m);
+        setHumidity(current.relativeHumidity2m);
+        setRain(current.rain);
+        setWeatherCode(Math.floor(current.weatherCode));
+        setWindSpeed(current.windSpeed10m.toString().slice(0, 2));
+        const weatherDescription = getDescription(current.weatherCode);
         setDescription(weatherDescription);
-        const formattedValues = [
-          weatherData.current.temperature2m,
-          weatherData.daily.temperature2mMin[0],
-          weatherData.daily.temperature2mMax[0],
-        ].map(value => Math.floor(value));
-        setTemperature(formattedValues);
-        setHumidity(weatherData.current.relativeHumidity2m);
-        setRain(weatherData.current.rain);
-        setWindSpeed(weatherData.current.windSpeed10m.toString().slice(0, 2));
-        // TODAY AREA ===================================
-        // Creating a new array that gets the next hours
-        const currentHour = new Date().getHours();
-        const hours = [];
-        for (let i = 0; i < 24; i++) {
-          const nextHour = (currentHour + i) % 24;
-          const formattedHour =
-            nextHour > -1 && nextHour < 10 ? `0${nextHour}` : String(nextHour);
-          hours.push(formattedHour);
-        }
-        //console.log('HORAS = ', hours);
-
-        setNextHours(hours);
-        //formatting all the temperatures to get two decimal places
-        const formattedArray = Array.from(weatherData.hourly.temperature2m).map(
-          value => Math.floor(value),
-        );
-        setTemperatureHourly(formattedArray);
-        /* console.log(
-          'TEMPERATURAS = ',
-          weatherData.hourly.temperature2m.map(value => Math.floor(value)),
-        ); */
-        setWeatherCodeHourly(Array.from(weatherData.hourly.weatherCode));
-        //console.log('CODES HOURLY = ', weatherData.hourly.weatherCode);
-
-        /* for (let i = 0; i < weatherData.hourly.time.length; i++) {
-          console.log('TEMPO = ', weatherData.hourly.time[i]);
-        } */
-
-        // =============================================
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
     };
     // ================================================
-    fetchOpenMeteoData();
-    // ================================================
-    const fetchForecast = async () => {
+    const fetchHourly = async (
+      lat: Geocoder.fromParams,
+      long: Geocoder.fromParams,
+    ) => {
       try {
-        const forecastData = await fetchForecastData();
-        //formatting to get only the two digits of the arrays
-        const oldArrayMin = forecastData.daily.temperature2mMin;
-        const formattedArrayToMin = oldArrayMin.map((value: string) => {
-          const formattedValue = parseInt(value, 10).toString();
-          return formattedValue;
-        });
-        //console.log('formattedArrayMin === ', formattedArrayToMin);
-        // ----------------------------------------------------------
-        const oldArrayMax = forecastData.daily.temperature2mMax;
-        const formattedArrayToMax = oldArrayMax.map((value: string) => {
-          const formattedValue = parseInt(value, 10).toString();
-          return formattedValue;
-        });
-        //console.log('formattedArrayMax === ', formattedArrayToMax);
+        // TODAY AREA ===================================
+        const hoursArray = Array.from({length: 25}, (_, index) =>
+          index.toString().padStart(2, '0'),
+        );
+        setHour(hoursArray);
+        const {hourly} = await fetchHourlyData(lat, long);
 
-        // ----------------------------------------------------------
-        const newTemperatureObject = {
-          temperature2mMin: formattedArrayToMin,
-          temperature2mMax: formattedArrayToMax,
-        };
-        setForecastTemperature(newTemperatureObject);
+        // Formatting all the temperatures to get two decimal places
+        const formattedArray = Array.from(hourly.temperature2m).map(value =>
+          Math.floor(value),
+        );
+
+        setTemperatureHourly(formattedArray);
+        setWeatherCodeHourly(Array.from(hourly.weatherCode));
       } catch (error) {
-        console.error('Failed to fetch weather data:', error);
+        console.error('Failed to fetch Daily Data:', error);
       }
     };
     // ================================================
-    fetchForecast();
+
+    const fetchForecast = async (
+      lat: Geocoder.fromParams,
+      long: Geocoder.fromParams,
+    ) => {
+      try {
+        const forecastData = await fetchForecastData(lat, long);
+        setForecastTemperature({
+          tempMin: forecastData.daily.temperature2mMin,
+          tempMax: forecastData.daily.temperature2mMax,
+        });
+        setWeatherCodeDaily(forecastData.daily.weatherCode);
+      } catch (error) {
+        console.error('Failed to fetch forecast Data:', error);
+      }
+    };
     // ================================================
+    //If permission is granted, getCurrentPosition
+    const requestCurrentPosition = async () => {
+      const {positionLatitude, positionLongitude} = await getPosition();
+      const cityName = await getCityName(positionLatitude, positionLongitude);
+      setCityName(cityName);
+
+      return {positionLatitude, positionLongitude};
+    };
+    // ================================================
+    const optimizer = async () => {
+      const {positionLatitude, positionLongitude} =
+        await requestCurrentPosition();
+
+      fetchCurrent(positionLatitude, positionLongitude);
+      fetchHourly(positionLatitude, positionLongitude);
+      fetchForecast(positionLatitude, positionLongitude);
+    };
+    optimizer();
   }, []);
   useOnGetDate();
   useOnGetWeek();

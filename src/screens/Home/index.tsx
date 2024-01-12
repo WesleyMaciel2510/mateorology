@@ -1,5 +1,12 @@
 import React from 'react';
-import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import {useInit, useSharedState} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -7,6 +14,7 @@ import LottieView from 'lottie-react-native';
 import GreetingComponent from '../../components/greeting';
 import {getAnimationName} from '../../assets/animations/getAnimationName';
 import TodayColumn from '../../components/todayColumn';
+import NextForecast from '../../components/nextForecast';
 
 interface Props {
   navigation: any;
@@ -19,10 +27,9 @@ export default function Home(props: Props) {
     humidity,
     rain,
     temperature,
+    forecastTemperature,
     windSpeed,
     date,
-    week,
-    forecastTemperature,
     weatherCode,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
@@ -36,27 +43,26 @@ export default function Home(props: Props) {
   }, [props.navigation]);
   // ============================================================================
   const animationURL = getAnimationName(weatherCode, null, false);
+  const currentTime = new Date();
+  const currentHour = currentTime.getHours();
+  //console.log('currentHour = ', currentHour);
+
+  const {width} = Dimensions.get('window');
+  const startPosition = currentHour * (width < 400 ? 75 : 77);
+
   // ============================================================================
   return (
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
-        <View style={{flex: 1}}>
-          <View style={styles.titleArea}>
-            <FontAwesome5
-              name={'map-marker-alt'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
-            />
-            <Text style={styles.titleText}> {cityName} </Text>
-            <FontAwesome5
-              name={'chevron-down'}
-              size={20}
-              color="#fff"
-              style={[styles.iconStyle, {marginTop: 15}]}
-            />
-          </View>
+        <View style={styles.titleArea}>
+          <FontAwesome5
+            name={'map-marker-alt'}
+            size={30}
+            color="#fff"
+            style={styles.iconStyle}
+          />
+          <Text style={styles.titleText}> {cityName} </Text>
         </View>
         <GreetingComponent />
         <LottieView
@@ -67,10 +73,11 @@ export default function Home(props: Props) {
         />
         <View style={styles.temperatureArea}>
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
-            {temperature[0]}º
+            {temperature}º
           </Text>
           <Text style={[styles.text, {fontSize: 23}]}>
-            Min.: {temperature[1]}º Max.: {temperature[2]}º
+            Min.: {forecastTemperature.tempMin[0]}º Max.:{' '}
+            {forecastTemperature.tempMax[0]}º
           </Text>
           <Text style={[styles.text, {fontSize: 23}]}>{description}</Text>
         </View>
@@ -120,7 +127,10 @@ export default function Home(props: Props) {
                 </Text>
               </View>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              horizontal
+              contentOffset={{x: startPosition, y: 0}}
+              showsHorizontalScrollIndicator={false}>
               <TodayColumn index={0} />
               <TodayColumn index={1} />
               <TodayColumn index={2} />
@@ -164,118 +174,13 @@ export default function Home(props: Props) {
               </View>
             </View>
             <View style={styles.rowView}>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[0]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[0]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[0]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[1]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/sun-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[1]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[1]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[2]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10, paddingLeft: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[2]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[2]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[3]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[3]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[3]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[4]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[4]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[4]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[5]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[5]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[5]}
-                  {'º  '}
-                </Text>
-              </View>
-              <View style={styles.line}>
-                <Text style={[styles.text, {fontSize: 20}]}> {week[6]}</Text>
-                <LottieView
-                  source={require('../../assets/animations/thunder-rain.json')}
-                  style={[
-                    styles.animationArea,
-                    {width: 50, height: 50, margin: 10},
-                  ]}
-                />
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {forecastTemperature.temperature2mMin[6]}
-                  {'º  '}
-                  {forecastTemperature.temperature2mMax[6]}
-                  {'º  '}
-                </Text>
-              </View>
+              <NextForecast index={0} />
+              <NextForecast index={1} />
+              <NextForecast index={2} />
+              <NextForecast index={3} />
+              <NextForecast index={4} />
+              <NextForecast index={5} />
+              <NextForecast index={6} />
             </View>
           </View>
         </View>
@@ -289,7 +194,7 @@ const styles = StyleSheet.create({
   },
   titleArea: {
     flexDirection: 'row',
-    margin: 50,
+    margin: 30,
     justifyContent: 'flex-start',
   },
   titleText: {

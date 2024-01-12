@@ -2,50 +2,46 @@ import {fetchWeatherApi} from 'openmeteo';
 import 'url-search-params-polyfill';
 import 'text-encoding';
 
-async function fetchForecastData(
+async function fetchHourlyData(
   positionLatitude: Geocoder.fromParams,
   positionLongitude: Geocoder.fromParams,
-): Promise<any> {
+) {
   const params = {
     latitude: positionLatitude,
     longitude: positionLongitude,
-    daily: ['weather_code', 'temperature_2m_max', 'temperature_2m_min'],
-    /* temperature_unit: 'fahrenheit',
-    wind_speed_unit: 'ms', */
+    hourly: ['temperature_2m', 'weather_code'],
     timezone: 'America/Sao_Paulo',
+    forecast_days: 1,
   };
+
   const url = 'https://api.open-meteo.com/v1/forecast';
   const responses = await fetchWeatherApi(url, params);
 
+  // Helper function to form time ranges
   const range = (start: number, stop: number, step: number) =>
     Array.from({length: (stop - start) / step}, (_, i) => start + i * step);
 
+  // Process first location. Add a for-loop for multiple locations or weather models
   const response = responses[0];
-
-  // Attributes for timezone and location
   const utcOffsetSeconds = response.utcOffsetSeconds();
 
-  const daily = response.daily()!;
+  const hourly = response.hourly()!;
 
+  // Note: The order of weather variables in the URL query and the indices below need to match!
   const weatherData = {
-    daily: {
+    hourly: {
       time: range(
-        Number(daily.time()),
-        Number(daily.timeEnd()),
-        daily.interval(),
+        Number(hourly.time()),
+        Number(hourly.timeEnd()),
+        hourly.interval(),
       ).map(t => new Date((t + utcOffsetSeconds) * 1000)),
-      weatherCode: daily.variables(0)!.valuesArray()!,
-      temperature2mMax: daily
-        .variables(1)!
+      temperature2m: hourly
+        .variables(0)!
         .valuesArray()!
         .map(value => Math.floor(value)),
-      temperature2mMin: daily
-        .variables(2)!
-        .valuesArray()!
-        .map(value => Math.floor(value)),
+      weatherCode: hourly.variables(1)!.valuesArray()!,
     },
   };
   return weatherData;
 }
-
-export default fetchForecastData;
+export default fetchHourlyData;

@@ -53,14 +53,12 @@ export default function Search(props: Props) {
         </View>
         <View style={styles.searchArea}>
           <GooglePlacesInput />
-          <TouchableOpacity /* onPress={} */>
-            <FontAwesome5
-              name={'search'}
-              size={30}
-              color="#5f9dfa"
-              style={[styles.iconStyle, {marginLeft: 10}]}
-            />
-          </TouchableOpacity>
+          <FontAwesome5
+            name={'search'}
+            size={30}
+            color="#5f9dfa"
+            style={[styles.iconStyle, {marginLeft: 10}]}
+          />
         </View>
         <View>
           <Text
@@ -71,21 +69,27 @@ export default function Search(props: Props) {
             Search to add a new city
           </Text>
         </View>
-        <TouchableOpacity onPress={() => handlePress(1)}>
+        <TouchableOpacity
+          activeOpacity={selectedView === 1 ? 1 : 0}
+          onPress={() => handlePress(1)}>
           {Object.keys(city1).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={1} />
           ) : (
             <CityBoard borderStyles={borderStyles} selectedBoard={1} />
           )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress(2)}>
+        <TouchableOpacity
+          activeOpacity={selectedView === 2 ? 1 : 0}
+          onPress={() => handlePress(2)}>
           {Object.keys(city2).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={2} />
           ) : (
             <CityBoard borderStyles={borderStyles} selectedBoard={2} />
           )}
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handlePress(3)}>
+        <TouchableOpacity
+          activeOpacity={selectedView === 3 ? 1 : 0}
+          onPress={() => handlePress(3)}>
           {Object.keys(city3).length === 0 ? (
             <NewCity borderStyles={borderStyles} selectedBoard={3} />
           ) : (

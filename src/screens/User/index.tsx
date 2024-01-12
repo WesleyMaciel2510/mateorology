@@ -30,7 +30,7 @@ export default function User(props: Props) {
   const navigation = useNavigation<BottomIconsNavigationProp>();
 
   const {toggleButton, primaryColor, secondaryColor} = useSharedState();
-  const {locationPermission} = useSharedStateHome();
+  const {locationPermission, cityName} = useSharedStateHome();
 
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -165,7 +165,7 @@ export default function User(props: Props) {
 
             <View style={styles.alignRightView}>
               <Text style={[styles.text, {fontSize: 18, bottom: 3}]}>
-                Uberaba
+                {cityName}
               </Text>
             </View>
           </View>
