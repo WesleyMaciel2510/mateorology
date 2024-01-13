@@ -11,6 +11,7 @@ import {PermissionsAndroid} from 'react-native';
 import {getDescription} from '../../../components/getDescription';
 import {getPosition} from '../../../services/getPosition';
 import {getCityName} from '../../../services/getCityName';
+import {useSharedState as useSharedStateUser} from '../../User/logic';
 
 type PositionType = {
   latitude: number;
@@ -37,8 +38,6 @@ export const useStateVariables = () => {
   });
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
-  const [temperatureUnit, setTemperatureUnit] = useState('');
-  const [windSpeedUnit, setWindSpeedUnit] = useState('');
 
   return {
     locationPermission,
@@ -73,10 +72,6 @@ export const useStateVariables = () => {
     setPosition,
     weatherCode,
     setWeatherCode,
-    temperatureUnit,
-    setTemperatureUnit,
-    windSpeedUnit,
-    setWindSpeedUnit,
   };
 };
 
@@ -98,6 +93,7 @@ export const useInit = () => {
     setWeatherCodeHourly,
     setWeatherCodeDaily,
   } = useSharedState();
+  const {fahrenheit, metersToSeconds} = useSharedStateUser();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
 
@@ -128,9 +124,16 @@ export const useInit = () => {
     const fetchCurrent = async (
       lat: Geocoder.fromParams,
       long: Geocoder.fromParams,
+      fahrenheit: boolean,
+      metersToSeconds: boolean,
     ) => {
       try {
-        const {current} = await fetchCurrentData(lat, long);
+        const {current} = await fetchCurrentData(
+          lat,
+          long,
+          fahrenheit,
+          metersToSeconds,
+        );
 
         // TITLE AREA ===================================
         setTemperature(current.temperature2m);
@@ -199,7 +202,12 @@ export const useInit = () => {
       const {positionLatitude, positionLongitude} =
         await requestCurrentPosition();
 
-      fetchCurrent(positionLatitude, positionLongitude);
+      fetchCurrent(
+        positionLatitude,
+        positionLongitude,
+        fahrenheit,
+        metersToSeconds,
+      );
       //gets the day, if the day is the same, do not call these two again
       fetchHourly(positionLatitude, positionLongitude);
       fetchForecast(positionLatitude, positionLongitude);

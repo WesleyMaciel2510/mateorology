@@ -7,8 +7,8 @@ export const useStateVariables = () => {
   const [toggleButton, setToggleButton] = useState([true, true, true]);
   const [primaryColor, setPrimaryColor] = useState('#30ACDD');
   const [secondaryColor, setSecondaryColor] = useState('#288CC3');
-  const [tempUnit, setTempUnit] = useState('C');
-  const [windSpeedUnit, setWindSpeedUnit] = useState('KM/H');
+  const [fahrenheit, setFahrenheit] = useState(false);
+  const [metersToSeconds, setMetersToSeconds] = useState(false);
 
   return {
     toggleButton,
@@ -17,10 +17,10 @@ export const useStateVariables = () => {
     setPrimaryColor,
     secondaryColor,
     setSecondaryColor,
-    tempUnit,
-    setTempUnit,
-    windSpeedUnit,
-    setWindSpeedUnit,
+    fahrenheit,
+    setFahrenheit,
+    metersToSeconds,
+    setMetersToSeconds,
   };
 };
 
@@ -51,10 +51,8 @@ export const useOnToggleButtonPress = () => {
     secondaryColor,
     setPrimaryColor,
     setSecondaryColor,
-    tempUnit,
-    setTempUnit,
-    windSpeedUnit,
-    setWindSpeedUnit,
+    setFahrenheit,
+    setMetersToSeconds,
   } = useSharedState();
   const changeToggleButton = (pressedItem: number) => {
     console.log('pressed Item = ', pressedItem);
@@ -65,18 +63,14 @@ export const useOnToggleButtonPress = () => {
     const celsiusToFahrenheit = (pressedItem: number) => {
       console.log('chamou celsiusToFahrenheit');
       toggleButton[pressedItem] === true
-        ? (console.log('toggleButton ON = ', tempUnit),
-          setTempUnit('Fahrenheit ºF'))
-        : (console.log('toggleButton OFF = ', tempUnit),
-          setTempUnit('Celsius ºC'));
+        ? (console.log('toggleButton ON '), setFahrenheit(false))
+        : (console.log('toggleButton OFF '), setFahrenheit(true));
     };
     const metersToSeconds = (pressedItem: number) => {
       console.log('chamou metersToSeconds');
       toggleButton[pressedItem] === true
-        ? (console.log('toggleButton ON = ', windSpeedUnit),
-          setWindSpeedUnit('Meters Per Second'))
-        : (console.log('toggleButton OFF = ', windSpeedUnit),
-          setWindSpeedUnit('Kilometers Per Hour'));
+        ? (console.log('toggleButton ON = '), setMetersToSeconds(false))
+        : (console.log('toggleButton OFF = '), setMetersToSeconds(true));
     };
     const lightToDarkMode = () => {
       console.log('chamou lightToDarkMode');

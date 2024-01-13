@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {useInit, useSharedState} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
@@ -65,12 +66,14 @@ export default function Home(props: Props) {
           <Text style={styles.titleText}> {cityName} </Text>
         </View>
         <GreetingComponent />
-        <LottieView
-          source={animationURL}
-          autoPlay
-          loop
-          style={[styles.animationArea, {width: 150, height: 150}]}
-        />
+        <TouchableOpacity onPress={() => console.log('LALALA')}>
+          <LottieView
+            source={animationURL}
+            autoPlay
+            loop
+            style={[styles.animationArea, {width: 150, height: 150}]}
+          />
+        </TouchableOpacity>
         <View style={styles.temperatureArea}>
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
             {temperature}º

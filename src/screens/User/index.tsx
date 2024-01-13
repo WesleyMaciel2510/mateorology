@@ -27,8 +27,13 @@ type BottomIconsNavigationProp = NavigationProp<RootStackParamList>;
 export default function User(props: Props) {
   const navigation = useNavigation<BottomIconsNavigationProp>();
 
-  const {toggleButton, primaryColor, secondaryColor, tempUnit, windSpeedUnit} =
-    useSharedState();
+  const {
+    toggleButton,
+    primaryColor,
+    secondaryColor,
+    fahrenheit,
+    metersToSeconds,
+  } = useSharedState();
   const {locationPermission, cityName} = useSharedStateHome();
 
   // ============================================================================
@@ -69,7 +74,11 @@ export default function User(props: Props) {
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.text}> {tempUnit} </Text>
+            {/* {console.log('fahrenheit = ', fahrenheit)} */}
+            {/* {console.log('metersToSeconds = ', metersToSeconds)} */}
+            <Text style={styles.text}>
+              {fahrenheit ? 'Fahrenheit ºF' : 'Celsius ºC'}
+            </Text>
             <View style={styles.alignRightView}>
               <TouchableOpacity onPress={() => toggleButtonPress(0)}>
                 <FontAwesome5
@@ -88,12 +97,14 @@ export default function User(props: Props) {
               color="#fff"
               style={styles.iconStyle}
             />
-            <Text style={styles.text}>{windSpeedUnit}</Text>
+            <Text style={[styles.text, {fontSize: 18}]}>
+              {metersToSeconds ? 'Meters Per Second' : 'Kilometre Per Hour'}
+            </Text>
             <View style={styles.alignRightView}>
               <TouchableOpacity onPress={() => toggleButtonPress(1)}>
                 <FontAwesome5
                   name={toggleButton[1] === true ? 'toggle-on' : 'toggle-off'}
-                  size={38}
+                  size={37}
                   color="#fff"
                   style={styles.iconStyle}
                 />
@@ -155,14 +166,8 @@ export default function User(props: Props) {
               style={styles.iconStyle}
             />
             <View style={{flexDirection: 'column'}}>
-              <Text style={[styles.text, {fontSize: 18}]}>
-                Default Location:
-              </Text>
-            </View>
-
-            <View style={styles.alignRightView}>
-              <Text style={[styles.text, {fontSize: 18, bottom: 3}]}>
-                {cityName}
+              <Text style={[styles.text, {fontSize: 18, textAlign: 'left'}]}>
+                Default Location:{'\n'} {cityName}
               </Text>
             </View>
           </View>
