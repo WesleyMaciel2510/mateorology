@@ -114,7 +114,8 @@ export const useOnHandleLocationDenied = () => {
 export const clearData = async () => {
   try {
     // Clear AsyncStorage data
-    await AsyncStorage.clear();
+    //await AsyncStorage.clear();
+    //use mmkv
     RNRestart.Restart();
   } catch (error) {
     console.error('Error clearing data:', error);

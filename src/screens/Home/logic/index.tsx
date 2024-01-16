@@ -11,8 +11,7 @@ import {PermissionsAndroid} from 'react-native';
 import {getDescription} from '../../../components/getDescription';
 import {getPosition} from '../../../services/getPosition';
 import {getCityName} from '../../../services/getCityName';
-import {useSharedState as useSharedStateUser} from '../../User/logic';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {storage} from '../../../services/storage';
 
 type PositionType = {
   latitude: number;
@@ -39,17 +38,7 @@ export const useStateVariables = () => {
   });
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
-  const [asyncData, setAsyncData] = useState({
-    cityName: '',
-    weatherCode: '',
-    temperature: '',
-    forecastTemperature: {
-      tempMin: '',
-      tempMax: '',
-    },
-    humidity: '',
-    windSpeed: '',
-  });
+  const [updateAllData, setUpdateAllData] = useState(true);
 
   return {
     locationPermission,
@@ -84,8 +73,8 @@ export const useStateVariables = () => {
     setPosition,
     weatherCode,
     setWeatherCode,
-    asyncData,
-    setAsyncData,
+    updateAllData,
+    setUpdateAllData,
   };
 };
 
@@ -107,35 +96,24 @@ export const useInit = () => {
     setWeatherCodeHourly,
     setWeatherCodeDaily,
     setDate,
+    setWeek,
+    updateAllData,
+    setUpdateAllData,
   } = useSharedState();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
-    const loadDataFromStorage = async () => {
-      try {
-        console.log('loadTodayArea Data');
-        const storedDate = await AsyncStorage.getItem('date');
-        const storedTemperatureHourly = await AsyncStorage.getItem(
-          'temperatureHourly',
-        );
-        const storedHour = await AsyncStorage.getItem('hour');
-
-        if (storedDate !== null) {
-          setDate(JSON.parse(storedDate));
-        }
-
-        if (storedTemperatureHourly !== null) {
-          setTemperatureHourly(JSON.parse(storedTemperatureHourly));
-        }
-
-        if (storedHour !== null) {
-          setHour(JSON.parse(storedHour));
-        }
-      } catch (error) {
-        console.error('Error loading data from AsyncStorage:', error);
-      }
-    };
-
-    loadDataFromStorage();
+    // ================================================
+    // LOAD STORAGE DATA ==============================
+    const storedCurrentDay = storage.getString('currentDay');
+    // ================================================
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate().toString().padStart(2, '0');
+    console.log(
+      'currentDay = ',
+      currentDay,
+      'storedCurrentDay = ',
+      storedCurrentDay,
+    );
     // ================================================
     //Asking for Permission only if not granted to optimize the app
     const requestLocation = async () => {
@@ -167,9 +145,7 @@ export const useInit = () => {
       try {
         const {current} = await fetchCurrentData(lat, long);
 
-        // TITLE AREA ===================================
-        // ==============================================
-
+        // TITLE AREA ==================================
         setTemperature(current.temperature2m);
         setHumidity(current.relativeHumidity2m);
         setRain(current.rain);
@@ -202,21 +178,6 @@ export const useInit = () => {
 
         setTemperatureHourly(formattedArray);
         setWeatherCodeHourly(Array.from(hourly.weatherCode));
-        //Store in Cache with AsyncStorage
-        // Store data in AsyncStorage
-        try {
-          await AsyncStorage.setItem('hoursArray', JSON.stringify(hoursArray));
-          await AsyncStorage.setItem(
-            'temperatureHourly',
-            JSON.stringify(formattedArray),
-          );
-          await AsyncStorage.setItem(
-            'weatherCodeHourly',
-            JSON.stringify(Array.from(hourly.weatherCode)),
-          );
-        } catch (error) {
-          console.error('Error storing data:', error);
-        }
       } catch (error) {
         console.error('Failed to fetch Daily Data:', error);
       }
@@ -251,92 +212,90 @@ export const useInit = () => {
     const optimizer = async () => {
       const {positionLatitude, positionLongitude} =
         await requestCurrentPosition();
-
-      //Store the currentDate as 'dateStored', if the dateStored is the same as currentDate,
-      //You don't need to request daily and hourly Weather Data, else: request all
-      const currentDate = new Date();
-      const day = currentDate.getDate().toString().padStart(2, '0');
-      const month = getCurrentMonth(currentDate.getMonth());
-      const fullDate = [day, month];
-      setDate(fullDate);
-      const jsonValue = JSON.stringify(fullDate);
-      const storedDate = await AsyncStorage.getItem('storedDate');
-      if (storedDate === jsonValue) {
-        console.log('atualizou os dados, chamar somente currentData  ');
-        // CURRENT HOUR =====
+      //Store the currentDay, if the storedCurrentDay is the same as currentDay,
+      //You don't need to request daily and hourly Weather Data, else, request all
+      if (currentDay === storedCurrentDay) {
+        console.log('atualiza dados do momento');
+        setUpdateAllData(false);
         fetchCurrent(positionLatitude, positionLongitude);
+
         const hoursArray = Array.from({length: 25}, (_, index) =>
           index.toString().padStart(2, '0'),
         );
         setHour(hoursArray);
-        // CURRENT DAY =====
       } else {
-        console.log('dia diferente, chamar tudo');
+        console.log('atualiza tudo');
+        getDate();
+        getWeek();
+        // CURRENT HOUR =====
         fetchCurrent(positionLatitude, positionLongitude);
+
+        const hoursArray = Array.from({length: 25}, (_, index) =>
+          index.toString().padStart(2, '0'),
+        );
+        setHour(hoursArray);
+
+        // CURRENT DAY =====
         fetchHourly(positionLatitude, positionLongitude);
-
         fetchForecast(positionLatitude, positionLongitude);
-
-        await AsyncStorage.setItem('storedDate', jsonValue);
       }
     };
     optimizer();
   }, []);
-  //useOnGetDate();
-  useOnGetWeek();
 };
 
-/* export const useOnGetDate = () => {
-  const {positionLatitude, positionLongitude, setDate} = useSharedState();
-  useEffect(() => {
-    //console.log('chamou useOnGetDate');
-  }, [setDate]);
-}; */
-
-const getCurrentMonth = (monthIndex: number): string => {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-  return months[monthIndex];
-};
-export const useOnGetWeek = () => {
-  const {setWeek} = useSharedState();
-
-  const getWeekdays = () => {
-    const weekdays = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
+export const getDate = () => {
+  console.log('chamou useOnGetDate');
+  const getCurrentMonth = (monthIndex: number): string => {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
-    const today = new Date();
-    const currentDayIndex = today.getDay();
-    const currentWeekdays = [];
-
-    for (let i = 0; i < 7; i++) {
-      const index = (currentDayIndex + i) % 7;
-      currentWeekdays.push(weekdays[index]);
-    }
-
-    return currentWeekdays;
+    return months[monthIndex];
   };
 
-  useEffect(() => {
-    const weekDays = getWeekdays();
-    setWeek(weekDays);
-  }, [setWeek]);
+  const currentDate = new Date();
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const month = getCurrentMonth(currentDate.getMonth());
+  storage.set('currentDay', day);
+  storage.set('currentMonth', month);
+
+  //const fullDate = [day, month];
+  //return fullDate;
+};
+
+export const getWeek = () => {
+  console.log('chamou getWeek');
+
+  const weekdays = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const today = new Date();
+  const currentDayIndex = today.getDay();
+  const currentWeekdays = [];
+
+  for (let i = 0; i < 7; i++) {
+    const index = (currentDayIndex + i) % 7;
+    currentWeekdays.push(weekdays[index]);
+  }
+  console.log('weeks = ', currentWeekdays);
+  storage.set('currentWeekdays', JSON.stringify(currentWeekdays));
+
+  //return currentWeekdays;
 };

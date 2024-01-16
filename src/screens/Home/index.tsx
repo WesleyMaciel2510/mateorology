@@ -8,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {useInit, useSharedState} from './logic';
+import {useInit, useSharedState, useOnGetDate, useOnGetWeek} from './logic';
 import {useSharedState as useSharedStateUser} from '../User/logic';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
@@ -32,6 +32,7 @@ export default function Home(props: Props) {
     windSpeed,
     date,
     weatherCode,
+    updateAllData,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
   useInit();
