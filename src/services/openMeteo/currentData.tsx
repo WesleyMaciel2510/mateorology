@@ -5,12 +5,7 @@ import 'text-encoding';
 async function fetchWeatherData(
   positionLatitude: Geocoder.fromParams,
   positionLongitude: Geocoder.fromParams,
-  fahrenheit: boolean,
-  metersToSeconds: boolean,
 ) {
-  //for celsius and Km/h does not include anything
-  const tempUnit = fahrenheit ? {temperature_unit: 'fahrenheit'} : null;
-  const windSpeedUnit = metersToSeconds ? {wind_speed_unit: 'ms'} : null;
   const params = {
     latitude: positionLatitude,
     longitude: positionLongitude,
@@ -21,8 +16,6 @@ async function fetchWeatherData(
       'weather_code',
       'wind_speed_10m',
     ],
-    tempUnit,
-    windSpeedUnit,
     timezone: 'America/Sao_Paulo',
     forecast_days: 1,
   };

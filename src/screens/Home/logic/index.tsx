@@ -12,6 +12,7 @@ import {getDescription} from '../../../components/getDescription';
 import {getPosition} from '../../../services/getPosition';
 import {getCityName} from '../../../services/getCityName';
 import {useSharedState as useSharedStateUser} from '../../User/logic';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PositionType = {
   latitude: number;
@@ -38,6 +39,17 @@ export const useStateVariables = () => {
   });
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
+  const [asyncData, setAsyncData] = useState({
+    cityName: '',
+    weatherCode: '',
+    temperature: '',
+    forecastTemperature: {
+      tempMin: '',
+      tempMax: '',
+    },
+    humidity: '',
+    windSpeed: '',
+  });
 
   return {
     locationPermission,
@@ -72,6 +84,8 @@ export const useStateVariables = () => {
     setPosition,
     weatherCode,
     setWeatherCode,
+    asyncData,
+    setAsyncData,
   };
 };
 
@@ -92,11 +106,36 @@ export const useInit = () => {
     setWeatherCode,
     setWeatherCodeHourly,
     setWeatherCodeDaily,
+    setDate,
   } = useSharedState();
-  const {fahrenheit, metersToSeconds} = useSharedStateUser();
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
+    const loadDataFromStorage = async () => {
+      try {
+        console.log('loadTodayArea Data');
+        const storedDate = await AsyncStorage.getItem('date');
+        const storedTemperatureHourly = await AsyncStorage.getItem(
+          'temperatureHourly',
+        );
+        const storedHour = await AsyncStorage.getItem('hour');
 
+        if (storedDate !== null) {
+          setDate(JSON.parse(storedDate));
+        }
+
+        if (storedTemperatureHourly !== null) {
+          setTemperatureHourly(JSON.parse(storedTemperatureHourly));
+        }
+
+        if (storedHour !== null) {
+          setHour(JSON.parse(storedHour));
+        }
+      } catch (error) {
+        console.error('Error loading data from AsyncStorage:', error);
+      }
+    };
+
+    loadDataFromStorage();
     // ================================================
     //Asking for Permission only if not granted to optimize the app
     const requestLocation = async () => {
@@ -124,21 +163,17 @@ export const useInit = () => {
     const fetchCurrent = async (
       lat: Geocoder.fromParams,
       long: Geocoder.fromParams,
-      fahrenheit: boolean,
-      metersToSeconds: boolean,
     ) => {
       try {
-        const {current} = await fetchCurrentData(
-          lat,
-          long,
-          fahrenheit,
-          metersToSeconds,
-        );
+        const {current} = await fetchCurrentData(lat, long);
 
         // TITLE AREA ===================================
+        // ==============================================
+
         setTemperature(current.temperature2m);
         setHumidity(current.relativeHumidity2m);
         setRain(current.rain);
+
         setWeatherCode(Math.floor(current.weatherCode));
         setWindSpeed(current.windSpeed10m.toString().slice(0, 2));
         const weatherDescription = getDescription(current.weatherCode);
@@ -167,6 +202,21 @@ export const useInit = () => {
 
         setTemperatureHourly(formattedArray);
         setWeatherCodeHourly(Array.from(hourly.weatherCode));
+        //Store in Cache with AsyncStorage
+        // Store data in AsyncStorage
+        try {
+          await AsyncStorage.setItem('hoursArray', JSON.stringify(hoursArray));
+          await AsyncStorage.setItem(
+            'temperatureHourly',
+            JSON.stringify(formattedArray),
+          );
+          await AsyncStorage.setItem(
+            'weatherCodeHourly',
+            JSON.stringify(Array.from(hourly.weatherCode)),
+          );
+        } catch (error) {
+          console.error('Error storing data:', error);
+        }
       } catch (error) {
         console.error('Failed to fetch Daily Data:', error);
       }
@@ -202,56 +252,64 @@ export const useInit = () => {
       const {positionLatitude, positionLongitude} =
         await requestCurrentPosition();
 
-      fetchCurrent(
-        positionLatitude,
-        positionLongitude,
-        fahrenheit,
-        metersToSeconds,
-      );
-      //gets the day, if the day is the same, do not call these two again
-      fetchHourly(positionLatitude, positionLongitude);
-      fetchForecast(positionLatitude, positionLongitude);
-    };
-    optimizer();
-  }, []);
-  useOnGetDate();
-  useOnGetWeek();
-};
-
-export const useOnGetDate = () => {
-  const {setDate} = useSharedState();
-  useEffect(() => {
-    //console.log('chamou useOnGetDate');
-    const getCurrentDate = () => {
+      //Store the currentDate as 'dateStored', if the dateStored is the same as currentDate,
+      //You don't need to request daily and hourly Weather Data, else: request all
       const currentDate = new Date();
       const day = currentDate.getDate().toString().padStart(2, '0');
       const month = getCurrentMonth(currentDate.getMonth());
+      const fullDate = [day, month];
+      setDate(fullDate);
+      const jsonValue = JSON.stringify(fullDate);
+      const storedDate = await AsyncStorage.getItem('storedDate');
+      if (storedDate === jsonValue) {
+        console.log('atualizou os dados, chamar somente currentData  ');
+        // CURRENT HOUR =====
+        fetchCurrent(positionLatitude, positionLongitude);
+        const hoursArray = Array.from({length: 25}, (_, index) =>
+          index.toString().padStart(2, '0'),
+        );
+        setHour(hoursArray);
+        // CURRENT DAY =====
+      } else {
+        console.log('dia diferente, chamar tudo');
+        fetchCurrent(positionLatitude, positionLongitude);
+        fetchHourly(positionLatitude, positionLongitude);
 
-      setDate([day, month]);
+        fetchForecast(positionLatitude, positionLongitude);
+
+        await AsyncStorage.setItem('storedDate', jsonValue);
+      }
     };
-
-    const getCurrentMonth = (monthIndex: number): string => {
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
-      return months[monthIndex];
-    };
-
-    getCurrentDate();
-  }, [setDate]);
+    optimizer();
+  }, []);
+  //useOnGetDate();
+  useOnGetWeek();
 };
 
+/* export const useOnGetDate = () => {
+  const {positionLatitude, positionLongitude, setDate} = useSharedState();
+  useEffect(() => {
+    //console.log('chamou useOnGetDate');
+  }, [setDate]);
+}; */
+
+const getCurrentMonth = (monthIndex: number): string => {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return months[monthIndex];
+};
 export const useOnGetWeek = () => {
   const {setWeek} = useSharedState();
 

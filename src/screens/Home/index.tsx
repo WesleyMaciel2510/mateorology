@@ -44,9 +44,9 @@ export default function Home(props: Props) {
   }, [props.navigation]);
   // ============================================================================
   const animationURL = getAnimationName(weatherCode, null, false);
+
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
-  //console.log('currentHour = ', currentHour);
 
   const {width} = Dimensions.get('window');
   const startPosition = currentHour * (width < 400 ? 75 : 77);
@@ -66,14 +66,12 @@ export default function Home(props: Props) {
           <Text style={styles.titleText}> {cityName} </Text>
         </View>
         <GreetingComponent />
-        <TouchableOpacity onPress={() => console.log('LALALA')}>
-          <LottieView
-            source={animationURL}
-            autoPlay
-            loop
-            style={[styles.animationArea, {width: 150, height: 150}]}
-          />
-        </TouchableOpacity>
+        <LottieView
+          source={animationURL}
+          autoPlay
+          loop
+          style={[styles.animationArea, {width: 150, height: 150}]}
+        />
         <View style={styles.temperatureArea}>
           <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
             {temperature}º

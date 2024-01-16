@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react';
 import {Linking, Alert} from 'react-native';
 import {useBetween} from 'use-between';
 import {requestLocationPermission} from '../../../services/askPermission';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 
 export const useStateVariables = () => {
   const [toggleButton, setToggleButton] = useState([true, true, true]);
@@ -107,4 +109,14 @@ export const useOnHandleLocationDenied = () => {
     [{text: 'OK', onPress: requestLocationPermission}],
     {cancelable: false},
   );
+};
+
+export const clearData = async () => {
+  try {
+    // Clear AsyncStorage data
+    await AsyncStorage.clear();
+    RNRestart.Restart();
+  } catch (error) {
+    console.error('Error clearing data:', error);
+  }
 };

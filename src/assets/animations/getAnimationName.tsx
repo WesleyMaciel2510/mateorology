@@ -7,6 +7,8 @@ export const getAnimationName = (
   indexHour: number,
   futureData: boolean,
 ) => {
+  //console.log('chamou getAnimationName');
+
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
   const hour = futureData ? indexHour : currentHour;

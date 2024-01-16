@@ -1,5 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {startListeners} from '../listeners/index';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
 import User from '../screens/User';
@@ -21,6 +22,7 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppStack = () => {
+  //startListeners();
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={Home} />
