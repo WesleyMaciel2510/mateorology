@@ -21,7 +21,7 @@ export const checkLocationPermission = async () => {
     );
     return granted;
   } catch (err) {
-    console.warn(err);
+    console.warn('ERROR IN checkLocationPermission =', err);
     return false;
   }
 };

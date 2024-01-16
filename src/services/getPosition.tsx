@@ -11,7 +11,10 @@ export const getPosition = (): Promise<Position> => {
         const positionLongitude = position.coords.longitude.toFixed(4);
         resolve({positionLatitude, positionLongitude});
       },
-      error => reject(error),
+      error => {
+        console.error('ERROR IN GETPOSITION = ', error);
+        reject(error);
+      },
     );
   });
 };

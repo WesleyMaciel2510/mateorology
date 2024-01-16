@@ -32,7 +32,6 @@ export default function Home(props: Props) {
     windSpeed,
     date,
     weatherCode,
-    updateAllData,
   } = useSharedState();
   const {primaryColor, secondaryColor} = useSharedStateUser();
   useInit();
@@ -58,12 +57,12 @@ export default function Home(props: Props) {
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
         <View style={styles.titleArea}>
-          <FontAwesome5
+          {/* <FontAwesome5
             name={'map-marker-alt'}
             size={30}
             color="#fff"
             style={styles.iconStyle}
-          />
+          /> */}
           <Text style={styles.titleText}> {cityName} </Text>
         </View>
         <GreetingComponent />
