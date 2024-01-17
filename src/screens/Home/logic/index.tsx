@@ -92,7 +92,6 @@ export const useInit = () => {
     setTemperature,
     setWindSpeed,
     setForecastTemperature,
-    weatherCode,
     setWeatherCode,
     setWeatherCodeHourly,
     setWeatherCodeDaily,
@@ -102,38 +101,49 @@ export const useInit = () => {
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
 
-    // ================================================
-    // LOAD STORAGE DATA ==============================
+    // ==================================================================
     const storedCurrentDay = storage.getString('currentDay');
-    // ================================================
     const currentDate = new Date();
     const currentDay = currentDate.getDate().toString().padStart(2, '0');
-
-    // ================================================
+    // ==================================================================
     // if not loading for the first time, load the data stored
     if (currentDay === storedCurrentDay) {
-      // DATE
+      // TITLE AREA =====================================================
+      // STORE ==========================================================
+      const currentTemperature = storage.getNumber('currentTemperature');
+      const relativeHumidity = storage.getNumber('relativeHumidity');
+      const rain = storage.getNumber('rain');
+      const weatherCode = storage.getNumber('weatherCode');
+      const windSpeed = storage.getString('windSpeed');
+      const description = storage.getString('description');
+      // SET ============================================================
+      setTemperature(currentTemperature);
+      setHumidity(relativeHumidity);
+      setRain(rain);
+      setWeatherCode(weatherCode);
+      setWindSpeed(windSpeed);
+      setDescription(description);
+      // TODAY AREA =====================================================
+      // STORE ==========================================================
       const currentMonth = storage.getString('currentMonth');
-      setDate([currentDay, currentMonth]);
       const stringCurrentWeekdays = storage.getString('currentWeekdays');
       const currentWeekdays = JSON.parse(stringCurrentWeekdays);
-      setWeek(currentWeekdays);
-      // TEMPERATURE
       const jsonTemperatureHourly = storage.getString('temperatureHourly');
       const temperatureHourlyArray = JSON.parse(jsonTemperatureHourly);
-      setTemperatureHourly(temperatureHourlyArray);
-
-      // WEATHERCODE HOURLY
       const jsonWeatherCodeHourly = storage.getString('weatherCodeHourly');
       const weatherCodeHourlyArray = JSON.parse(jsonWeatherCodeHourly);
+      // SET ========================================================
+      setDate([currentDay, currentMonth]);
+      setWeek(currentWeekdays);
+      setTemperatureHourly(temperatureHourlyArray);
       setWeatherCodeHourly(Array.from(weatherCodeHourlyArray));
-
+      // STORE ==========================================================
       const jsonTemperatureDaily = storage.getString('temperatureDaily');
       const temperatureDailyArray = JSON.parse(jsonTemperatureDaily);
-      setForecastTemperature(temperatureDailyArray);
-
       const jsonWeatherCodeDaily = storage.getString('weatherCodeDaily');
       const weatherCodeDailyArray = JSON.parse(jsonWeatherCodeDaily);
+      // SET ========================================================
+      setForecastTemperature(temperatureDailyArray);
       setWeatherCodeDaily(weatherCodeDailyArray);
     }
     // ================================================
@@ -166,8 +176,8 @@ export const useInit = () => {
     ) => {
       try {
         const {current} = await fetchCurrentData(lat, long);
-
-        // TITLE AREA ==================================
+        // TITLE AREA =================================================
+        // SET ========================================================
         setTemperature(current.temperature2m);
         setHumidity(current.relativeHumidity2m);
         setRain(current.rain);
@@ -175,6 +185,13 @@ export const useInit = () => {
         setWindSpeed(current.windSpeed10m.toString().slice(0, 2));
         const weatherDescription = getDescription(current.weatherCode);
         setDescription(weatherDescription);
+        // STORE =========================================================
+        storage.set('currentTemperature', current.temperature2m);
+        storage.set('relativeHumidity', current.relativeHumidity2m);
+        storage.set('rain', current.rain);
+        storage.set('weatherCode', Math.floor(current.weatherCode));
+        storage.set('windSpeed', current.windSpeed10m.toString().slice(0, 2));
+        storage.set('description', weatherDescription);
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
       }
@@ -185,18 +202,20 @@ export const useInit = () => {
       long: Geocoder.fromParams,
     ) => {
       try {
-        // TODAY AREA ===================================
+        // TODAY AREA =====================================================
+        const {hourly} = await fetchHourlyData(lat, long);
         const hoursArray = Array.from({length: 25}, (_, index) =>
           index.toString().padStart(2, '0'),
         );
-        setHour(hoursArray);
-        const {hourly} = await fetchHourlyData(lat, long);
-
         // Formatting all the temperatures to get two decimal places
         const formattedArray = Array.from(hourly.temperature2m).map(value =>
           Math.floor(value),
         );
-
+        // SET ===========================================================
+        setHour(hoursArray);
+        setTemperatureHourly(formattedArray);
+        setWeatherCodeHourly(Array.from(hourly.weatherCode));
+        // STORE =========================================================
         storage.set('temperatureHourly', JSON.stringify(formattedArray));
         storage.set(
           'weatherCodeHourly',
@@ -213,11 +232,16 @@ export const useInit = () => {
       long: Geocoder.fromParams,
     ) => {
       try {
+        // FORECAST AREA ==================================================
         const forecastData = await fetchForecastData(lat, long);
         const temperatureObject = {
           tempMin: forecastData.daily.temperature2mMin,
           tempMax: forecastData.daily.temperature2mMax,
         };
+        // SET ===========================================================
+        setForecastTemperature(temperatureObject);
+        setWeatherCodeDaily(forecastData.daily.weatherCode);
+        // STORE =========================================================
         storage.set('temperatureDaily', JSON.stringify(temperatureObject));
         storage.set(
           'weatherCodeDaily',
@@ -233,7 +257,6 @@ export const useInit = () => {
       const {positionLatitude, positionLongitude} = await getPosition();
 
       const cityName = await getCityName(positionLatitude, positionLongitude);
-      console.log('cityName = ', typeof cityName);
 
       if (typeof cityName === 'string') {
         setCityName(cityName);
@@ -327,6 +350,4 @@ export const getWeek = () => {
     currentWeekdays.push(weekdays[index]);
   }
   storage.set('currentWeekdays', JSON.stringify(currentWeekdays));
-
-  //return currentWeekdays;
 };
