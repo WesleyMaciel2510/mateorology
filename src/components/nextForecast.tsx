@@ -5,7 +5,7 @@ import {useSharedState} from '../screens/Home/logic';
 import {getAnimationName} from '../assets/animations/getAnimationName';
 
 const NextForecast = ({index}) => {
-  const {week, forecastTemperature, weatherCodeDaily} = useSharedState();
+  const {week, temperatureDaily, weatherCodeDaily} = useSharedState();
   // ===========================================================================
   const animationURL = getAnimationName(weatherCodeDaily[index], null, false);
 
@@ -20,10 +20,15 @@ const NextForecast = ({index}) => {
         loop
         autoPlay
       />
-      <Text style={styles.text}>
-        {forecastTemperature.tempMin[index]}º{' '}
-        {forecastTemperature.tempMax[index]}º
-      </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={styles.text}>{temperatureDaily.tempMin[index]}º </Text>
+        <Text style={styles.text}>{temperatureDaily.tempMax[index]}º</Text>
+      </View>
     </View>
   );
 };
@@ -38,7 +43,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
   },
   animationArea: {
     flex: 1,

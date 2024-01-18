@@ -75,8 +75,6 @@ export default function User(props: Props) {
                 color="#fff"
                 style={styles.iconStyle}
               />
-              {/* {console.log('fahrenheit = ', fahrenheit)} */}
-              {/* {console.log('metersToSeconds = ', metersToSeconds)} */}
               <Text style={styles.text}>
                 {fahrenheit ? 'Fahrenheit ºF' : 'Celsius ºC'}
               </Text>
@@ -122,7 +120,9 @@ export default function User(props: Props) {
                 color="#fff"
                 style={styles.iconStyle}
               />
-              <Text style={styles.text}> Light Mode </Text>
+              <Text style={styles.text}>
+                {primaryColor === '#30ACDD' ? 'Light Mode' : 'Dark Mode'}
+              </Text>
               <View style={styles.alignRightView}>
                 <TouchableOpacity onPress={() => toggleButtonPress(2)}>
                   <FontAwesome5

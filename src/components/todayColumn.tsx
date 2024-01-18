@@ -22,7 +22,7 @@ const TodayColumn = ({index}) => {
     <View style={styles.columnView}>
       <View>
         <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-          {temperatureHourly[index]}º C
+          {temperatureHourly[index]}º
         </Text>
         <LottieView
           source={animationURL}
@@ -31,7 +31,7 @@ const TodayColumn = ({index}) => {
           style={[styles.animationArea, {width: 50, height: 50, margin: 12}]}
         />
         <Text style={[styles.text, {fontSize: 20, margin: 10}]}>
-          {hour[index]}:00 {/* {index}:00 */}
+          {hour[index]}:00
         </Text>
       </View>
     </View>

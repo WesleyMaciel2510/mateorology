@@ -28,12 +28,12 @@ export default function Home(props: Props) {
     humidity,
     rain,
     temperature,
-    forecastTemperature,
+    temperatureDaily,
     windSpeed,
     date,
     weatherCode,
   } = useSharedState();
-  const {primaryColor, secondaryColor} = useSharedStateUser();
+  const {primaryColor, secondaryColor, metersToSeconds} = useSharedStateUser();
   useInit();
   // ============================================================================
   React.useLayoutEffect(() => {
@@ -57,12 +57,12 @@ export default function Home(props: Props) {
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
         <View style={styles.titleArea}>
-          {/* <FontAwesome5
+          <FontAwesome5
             name={'map-marker-alt'}
             size={30}
             color="#fff"
             style={styles.iconStyle}
-          /> */}
+          />
           <Text style={styles.titleText}> {cityName} </Text>
         </View>
         <GreetingComponent />
@@ -77,8 +77,8 @@ export default function Home(props: Props) {
             {temperature}º
           </Text>
           <Text style={[styles.text, {fontSize: 23}]}>
-            Min.: {forecastTemperature.tempMin[0]}º Max.:{' '}
-            {forecastTemperature.tempMax[0]}º
+            Min.: {temperatureDaily.tempMin[0]}º Max.:{' '}
+            {temperatureDaily.tempMax[0]}º
           </Text>
           <Text style={[styles.text, {fontSize: 23}]}>{description}</Text>
         </View>
@@ -110,7 +110,12 @@ export default function Home(props: Props) {
             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
               <FontAwesome5 name={'wind'} size={20} color="#fff" />
               <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
-                {windSpeed} km/h
+                {windSpeed}
+              </Text>
+            </View>
+            <View>
+              <Text style={[styles.text, {fontSize: 20}]}>
+                {metersToSeconds ? 'm/s' : 'Km/h'}
               </Text>
             </View>
           </View>
