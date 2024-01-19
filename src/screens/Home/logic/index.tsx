@@ -3,7 +3,6 @@ import {useBetween} from 'use-between';
 import fetchCurrentData from '../../../services/openMeteo/currentData';
 import fetchHourlyData from '../../../services/openMeteo/hourlyData';
 import fetchForecastData from '../../../services/openMeteo/nextForecast';
-import {useSharedState as useSharedStateUser} from '../../User/logic';
 import {
   requestLocationPermission,
   checkLocationPermission,
@@ -40,6 +39,9 @@ export const useStateVariables = () => {
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
   const [updateAllData, setUpdateAllData] = useState(true);
+  const [internetOn, setInternetOn] = useState(false);
+  const [gpsOn, setGpsOn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   return {
     locationPermission,
@@ -76,6 +78,12 @@ export const useStateVariables = () => {
     setWeatherCode,
     updateAllData,
     setUpdateAllData,
+    internetOn,
+    setInternetOn,
+    gpsOn,
+    setGpsOn,
+    isLoading,
+    setIsLoading,
   };
 };
 
@@ -98,20 +106,13 @@ export const useInit = () => {
     setWeatherCodeDaily,
     setDate,
     setWeek,
+    setGpsOn,
+    setIsLoading,
   } = useSharedState();
-  const {
-    primaryColor,
-    secondaryColor,
-    setPrimaryColor,
-    setSecondaryColor,
-    fahrenheit,
-    setFahrenheit,
-    metersToSeconds,
-    setMetersToSeconds,
-  } = useSharedStateUser();
 
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
+    setIsLoading(true);
     // ==================================================================
     const storedCurrentDay = storage.getString('currentDay');
     const currentDate = new Date();
@@ -320,6 +321,7 @@ export const useInit = () => {
       }
     };
     optimizer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 

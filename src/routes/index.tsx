@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {startListeners} from '../listeners/index';
+import {gpsListener} from '../listeners/gpsListener';
+import {internetListener} from '../listeners/internetListener';
+import {useSharedState} from '../screens/Home/logic';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
 import User from '../screens/User';
@@ -22,7 +24,8 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppStack = () => {
-  //startListeners();
+  const {setInternetOn} = useSharedState();
+
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={Home} />

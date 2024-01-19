@@ -17,7 +17,7 @@
       "@services/*": ["services/*"]
     },
     "esModuleInterop": true,
-    "types": ["react-native-fs"],
+    "types": ["react-native-fs", "use-between"],
     "resolveJsonModule": true // Add this line to enable JSON module resolution
   },
   "extends": "@tsconfig/react-native/tsconfig.json",
