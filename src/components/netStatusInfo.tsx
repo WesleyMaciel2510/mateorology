@@ -1,18 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useSharedState} from '../screens/Home/logic';
 import NetInfo from '@react-native-community/netinfo';
 
 const NetStatusInfo = ({}) => {
   const {internetOn, setInternetOn} = useSharedState();
-  NetInfo.addEventListener(state => {
-    if (state.isConnected) {
-      console.log('Internet is ON');
-      setInternetOn(true);
-    } else {
-      console.log('Internet is OFF');
-      setInternetOn(false);
-    }
+  useEffect(() => {
+    NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        console.log('Internet is ON');
+        setInternetOn(true);
+      } else {
+        console.log('Internet is OFF');
+        setInternetOn(false);
+      }
+    }, []);
   });
 
   const handlePress = () => {
