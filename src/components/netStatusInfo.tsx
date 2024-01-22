@@ -4,7 +4,7 @@ import {useSharedState} from '../screens/Home/logic';
 import NetInfo from '@react-native-community/netinfo';
 
 const NetStatusInfo = ({}) => {
-  const {setInternetOn} = useSharedState();
+  const {internetOn, setInternetOn} = useSharedState();
   NetInfo.addEventListener(state => {
     if (state.isConnected) {
       console.log('Internet is ON');
@@ -16,16 +16,16 @@ const NetStatusInfo = ({}) => {
   });
 
   const handlePress = () => {
-    setInternetOn(false);
+    setInternetOn(true);
   };
-  return (
+  return !internetOn ? (
     <View style={styles.container}>
       <Text style={styles.text}>No internet connection detected.</Text>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>DIMISS</Text>
+        <Text style={styles.buttonText}>DISMISS</Text>
       </TouchableOpacity>
     </View>
-  );
+  ) : null;
 };
 
 const styles = StyleSheet.create({
