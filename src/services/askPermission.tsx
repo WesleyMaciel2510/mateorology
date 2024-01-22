@@ -1,25 +1,35 @@
-import {PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid, Alert} from 'react-native';
 
 export const requestLocationPermission = async () => {
   try {
-    const granted = await PermissionsAndroid.request(
+    console.log('chamou requestLocationPermission in askPermission');
+
+    const result = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      //console.log('Permission granted!');
+    console.log('result = ', result);
+
+    if (result === PermissionsAndroid.RESULTS.result) {
+      console.log('Permission result!');
+    } else {
+      console.log('Permission NOT result!');
+      Alert.alert(
+        'Permission Denied',
+        'Please grant location permission to use the app.',
+      );
     }
-    return granted;
+    return result;
   } catch (err) {
-    console.warn('Deu erro = ', err);
+    console.error('Deu erro = ', err);
   }
 };
 
 export const checkLocationPermission = async () => {
   try {
-    const granted = await PermissionsAndroid.check(
+    const result = await PermissionsAndroid.check(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
     );
-    return granted;
+    return result;
   } catch (err) {
     console.warn('ERROR IN checkLocationPermission =', err);
     return false;

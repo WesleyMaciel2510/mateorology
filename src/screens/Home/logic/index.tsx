@@ -39,8 +39,8 @@ export const useStateVariables = () => {
   const [position, setPosition] = useState<PositionType | null>(null);
   const [weatherCode, setWeatherCode] = useState(null);
   const [updateAllData, setUpdateAllData] = useState(true);
-  const [internetOn, setInternetOn] = useState(false);
-  const [gpsOn, setGpsOn] = useState(false);
+  const [internetOn, setInternetOn] = useState(true);
+  const [gpsOn, setGpsOn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   return {
@@ -91,6 +91,7 @@ export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
   const {
+    locationPermission,
     setLocationPermission,
     setCityName,
     setDescription,
@@ -106,7 +107,6 @@ export const useInit = () => {
     setWeatherCodeDaily,
     setDate,
     setWeek,
-    setGpsOn,
     setIsLoading,
   } = useSharedState();
 
@@ -290,7 +290,6 @@ export const useInit = () => {
     // ================================================
     const optimizer = async () => {
       console.log('chegou em optimizer');
-
       const {positionLatitude, positionLongitude} =
         await requestCurrentPosition();
       //Store the currentDay, if the storedCurrentDay is the same as currentDay,
@@ -320,7 +319,13 @@ export const useInit = () => {
         fetchForecast(positionLatitude, positionLongitude);
       }
     };
-    optimizer();
+    /* if (locationPermission === true) {
+      try {
+        optimizer();
+      } catch (error) {
+        console.error('error in optimizer = ', error);
+      }
+    } */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
