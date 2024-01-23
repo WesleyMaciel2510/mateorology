@@ -10,12 +10,12 @@ export const requestLocationPermission = async () => {
     console.log('result = ', result);
 
     if (result === PermissionsAndroid.RESULTS.result) {
-      console.log('Permission result!');
+      console.log('Permission granted!');
     } else {
-      console.log('Permission NOT result!');
+      console.log('Permission NOT granted!');
       Alert.alert(
         'Permission Denied',
-        'Please grant location permission to use the app.',
+        'Please go to App Settings and Grant the permissin or clean the Cache.',
       );
     }
     return result;

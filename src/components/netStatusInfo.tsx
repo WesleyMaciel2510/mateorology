@@ -1,12 +1,14 @@
 import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {useSharedState} from '../screens/Home/logic';
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 
 const NetStatusInfo = ({}) => {
   const {internetOn, setInternetOn} = useSharedState();
+
   useEffect(() => {
-    NetInfo.addEventListener(state => {
+    // Subscribe to the event
+    const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
       if (state.isConnected) {
         console.log('Internet is ON');
         setInternetOn(true);
@@ -14,12 +16,27 @@ const NetStatusInfo = ({}) => {
         console.log('Internet is OFF');
         setInternetOn(false);
       }
-    }, []);
-  });
+    });
+
+    // Manually check the initial internet connection status
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        setInternetOn(true);
+      } else {
+        setInternetOn(false);
+      }
+    });
+
+    // Return a cleanup function to unsubscribe when the component is unmounted
+    return () => {
+      unsubscribe();
+    };
+  }, [setInternetOn]);
 
   const handlePress = () => {
     setInternetOn(true);
   };
+
   return !internetOn ? (
     <View style={styles.container}>
       <Text style={styles.text}>No internet connection detected.</Text>

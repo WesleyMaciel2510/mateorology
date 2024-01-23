@@ -4,21 +4,23 @@ import {useSharedState} from '../screens/Home/logic';
 import Geolocation from '@react-native-community/geolocation';
 
 const GpsStatusInfo = () => {
-  const {gpsOn, setGpsOn} = useSharedState();
-  Geolocation.watchPosition(
-    () => {
-      console.log('GPS STATUS = ', gpsOn);
-      console.log('GPS DETECTADO COMO ON');
-      setGpsOn(true);
-    },
-    error => {
-      console.log('GPS STATUS = ', gpsOn);
-      console.log('GPS DETECTADO COMO OFF');
-      console.error(error);
-      setGpsOn(false);
-    },
-    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-  );
+  const {locationPermission, gpsOn, setGpsOn} = useSharedState();
+  if (locationPermission) {
+    Geolocation.watchPosition(
+      () => {
+        console.log('GPS STATUS = ', gpsOn);
+        console.log('GPS DETECTADO COMO ON');
+        setGpsOn(true);
+      },
+      error => {
+        console.log('GPS STATUS = ', gpsOn);
+        console.log('GPS DETECTADO COMO OFF');
+        console.error(error);
+        setGpsOn(false);
+      },
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+    );
+  }
 
   const handlePress = () => {
     setGpsOn(true);

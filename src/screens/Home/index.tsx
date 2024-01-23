@@ -33,6 +33,7 @@ export default function Home(props: Props) {
     date,
     weatherCode,
     locationPermission,
+    loading,
   } = useSharedState();
   const {primaryColor, secondaryColor, metersToSeconds} = useSharedStateUser();
   useInit();
@@ -57,152 +58,154 @@ export default function Home(props: Props) {
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
-        {/* {locationPermission ? ( */}
-        <View>
-          <View style={styles.titleArea}>
-            <FontAwesome5
-              name={'map-marker-alt'}
-              size={30}
-              color="#fff"
-              style={styles.iconStyle}
+        {locationPermission ? (
+          <View>
+            <View style={styles.titleArea}>
+              <FontAwesome5
+                name={'map-marker-alt'}
+                size={30}
+                color="#fff"
+                style={styles.iconStyle}
+              />
+              <Text style={styles.titleText}> {cityName} </Text>
+            </View>
+            <GreetingComponent />
+            <LottieView
+              source={animationURL}
+              autoPlay
+              loop
+              style={[styles.animationArea, {width: 150, height: 150}]}
             />
-            <Text style={styles.titleText}> {cityName} </Text>
-          </View>
-          <GreetingComponent />
-          <LottieView
-            source={animationURL}
-            autoPlay
-            loop
-            style={[styles.animationArea, {width: 150, height: 150}]}
-          />
-          <View style={styles.temperatureArea}>
-            <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
-              {temperature}º
-            </Text>
-            <Text style={[styles.text, {fontSize: 23}]}>
-              Min.: {temperatureDaily.tempMin[0]}º Max.:{' '}
-              {temperatureDaily.tempMax[0]}º
-            </Text>
-            <Text style={[styles.text, {fontSize: 23}]}>{description}</Text>
-          </View>
-          <View style={styles.weatherBarArea}>
-            <View
-              style={[
-                styles.simpleBar,
-                {backgroundColor: secondaryColor, flexDirection: 'row'},
-              ]}>
-              <View
-                style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <FontAwesome5
-                  name={'cloud-showers-heavy'}
-                  size={20}
-                  color="#fff"
-                  style={{marginLeft: 10}}
-                />
-                <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
-                  {rain} %
-                </Text>
-              </View>
-
-              <View
-                style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <FontAwesome5 name={'tint'} size={20} color="#fff" />
-                <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
-                  {humidity} %
-                </Text>
-              </View>
-
-              <View
-                style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                <FontAwesome5 name={'wind'} size={20} color="#fff" />
-                <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
-                  {windSpeed}
-                </Text>
-              </View>
-              <View>
-                <Text style={[styles.text, {fontSize: 20}]}>
-                  {metersToSeconds ? 'm/s' : 'Km/h'}
-                </Text>
-              </View>
+            <View style={styles.temperatureArea}>
+              <Text style={[styles.text, {fontSize: 50, fontWeight: 'bold'}]}>
+                {temperature}º
+              </Text>
+              <Text style={[styles.text, {fontSize: 23}]}>
+                Min.: {temperatureDaily.tempMin[0]}º Max.:{' '}
+                {temperatureDaily.tempMax[0]}º
+              </Text>
+              <Text style={[styles.text, {fontSize: 23}]}>{description}</Text>
             </View>
-
-            <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
-              <View style={{flexDirection: 'row', padding: 10}}>
-                <View style={styles.leftTextContainer}>
-                  <Text
-                    style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-                    Today
-                  </Text>
-                </View>
-                <View style={styles.rightTextContainer}>
-                  <Text
-                    style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-                    {date[0]}, {date[1]}
-                  </Text>
-                </View>
-              </View>
-              <ScrollView
-                horizontal
-                contentOffset={{x: startPosition, y: 0}}
-                showsHorizontalScrollIndicator={false}>
-                <TodayColumn index={0} />
-                <TodayColumn index={1} />
-                <TodayColumn index={2} />
-                <TodayColumn index={3} />
-                <TodayColumn index={4} />
-                <TodayColumn index={5} />
-                <TodayColumn index={6} />
-                <TodayColumn index={7} />
-                <TodayColumn index={8} />
-                <TodayColumn index={9} />
-                <TodayColumn index={10} />
-                <TodayColumn index={11} />
-                <TodayColumn index={12} />
-                <TodayColumn index={13} />
-                <TodayColumn index={14} />
-                <TodayColumn index={15} />
-                <TodayColumn index={16} />
-                <TodayColumn index={17} />
-                <TodayColumn index={18} />
-                <TodayColumn index={19} />
-                <TodayColumn index={20} />
-                <TodayColumn index={21} />
-                <TodayColumn index={22} />
-                <TodayColumn index={23} />
-              </ScrollView>
-            </View>
-            <View style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
-              <View style={{flexDirection: 'row', padding: 10}}>
-                <View style={styles.leftTextContainer}>
-                  <Text
-                    style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
-                    Next Forecast
-                  </Text>
-                </View>
-                <View style={styles.rightTextContainer}>
+            <View style={styles.weatherBarArea}>
+              <View
+                style={[
+                  styles.simpleBar,
+                  {backgroundColor: secondaryColor, flexDirection: 'row'},
+                ]}>
+                <View
+                  style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                   <FontAwesome5
-                    name={'calendar-week'}
-                    size={30}
+                    name={'cloud-showers-heavy'}
+                    size={20}
                     color="#fff"
-                    style={styles.iconStyle}
+                    style={{marginLeft: 10}}
                   />
+                  <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                    {rain} %
+                  </Text>
+                </View>
+
+                <View
+                  style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                  <FontAwesome5 name={'tint'} size={20} color="#fff" />
+                  <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                    {humidity} %
+                  </Text>
+                </View>
+
+                <View
+                  style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                  <FontAwesome5 name={'wind'} size={20} color="#fff" />
+                  <Text style={[styles.text, {fontSize: 20, marginLeft: 5}]}>
+                    {windSpeed}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={[styles.text, {fontSize: 20}]}>
+                    {metersToSeconds ? 'm/s' : 'Km/h'}
+                  </Text>
                 </View>
               </View>
-              <View style={styles.rowView}>
-                <NextForecast index={0} />
-                <NextForecast index={1} />
-                <NextForecast index={2} />
-                <NextForecast index={3} />
-                <NextForecast index={4} />
-                <NextForecast index={5} />
-                <NextForecast index={6} />
+
+              <View
+                style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
+                <View style={{flexDirection: 'row', padding: 10}}>
+                  <View style={styles.leftTextContainer}>
+                    <Text
+                      style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
+                      Today
+                    </Text>
+                  </View>
+                  <View style={styles.rightTextContainer}>
+                    <Text
+                      style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
+                      {date[0]}, {date[1]}
+                    </Text>
+                  </View>
+                </View>
+                <ScrollView
+                  horizontal
+                  contentOffset={{x: startPosition, y: 0}}
+                  showsHorizontalScrollIndicator={false}>
+                  <TodayColumn index={0} />
+                  <TodayColumn index={1} />
+                  <TodayColumn index={2} />
+                  <TodayColumn index={3} />
+                  <TodayColumn index={4} />
+                  <TodayColumn index={5} />
+                  <TodayColumn index={6} />
+                  <TodayColumn index={7} />
+                  <TodayColumn index={8} />
+                  <TodayColumn index={9} />
+                  <TodayColumn index={10} />
+                  <TodayColumn index={11} />
+                  <TodayColumn index={12} />
+                  <TodayColumn index={13} />
+                  <TodayColumn index={14} />
+                  <TodayColumn index={15} />
+                  <TodayColumn index={16} />
+                  <TodayColumn index={17} />
+                  <TodayColumn index={18} />
+                  <TodayColumn index={19} />
+                  <TodayColumn index={20} />
+                  <TodayColumn index={21} />
+                  <TodayColumn index={22} />
+                  <TodayColumn index={23} />
+                </ScrollView>
+              </View>
+              <View
+                style={[styles.boardArea, {backgroundColor: secondaryColor}]}>
+                <View style={{flexDirection: 'row', padding: 10}}>
+                  <View style={styles.leftTextContainer}>
+                    <Text
+                      style={[styles.text, {fontSize: 20, fontWeight: 'bold'}]}>
+                      Next Forecast
+                    </Text>
+                  </View>
+                  <View style={styles.rightTextContainer}>
+                    <FontAwesome5
+                      name={'calendar-week'}
+                      size={30}
+                      color="#fff"
+                      style={styles.iconStyle}
+                    />
+                  </View>
+                </View>
+                <View style={styles.rowView}>
+                  <NextForecast index={0} />
+                  <NextForecast index={1} />
+                  <NextForecast index={2} />
+                  <NextForecast index={3} />
+                  <NextForecast index={4} />
+                  <NextForecast index={5} />
+                  <NextForecast index={6} />
+                </View>
               </View>
             </View>
           </View>
-        </View>
-        {/* ) : (
+        ) : (
           <ErrorInfo />
-        )} */}
+        )}
       </ScrollView>
     </>
   );

@@ -19,7 +19,7 @@ type PositionType = {
 };
 
 export const useStateVariables = () => {
-  const [locationPermission, setLocationPermission] = useState(false);
+  const [locationPermission, setLocationPermission] = useState(true);
   const [cityName, setCityName] = useState('');
   const [description, setDescription] = useState('');
   const [humidity, setHumidity] = useState(0);
@@ -41,7 +41,7 @@ export const useStateVariables = () => {
   const [updateAllData, setUpdateAllData] = useState(true);
   const [internetOn, setInternetOn] = useState(true);
   const [gpsOn, setGpsOn] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return {
     locationPermission,
@@ -82,8 +82,8 @@ export const useStateVariables = () => {
     setInternetOn,
     gpsOn,
     setGpsOn,
-    isLoading,
-    setIsLoading,
+    loading,
+    setLoading,
   };
 };
 
@@ -91,7 +91,6 @@ export const useSharedState = () => useBetween(useStateVariables);
 
 export const useInit = () => {
   const {
-    locationPermission,
     setLocationPermission,
     setCityName,
     setDescription,
@@ -107,12 +106,12 @@ export const useInit = () => {
     setWeatherCodeDaily,
     setDate,
     setWeek,
-    setIsLoading,
+    setLoading,
   } = useSharedState();
 
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
-    setIsLoading(true);
+    setLoading(true);
     // ==================================================================
     const storedCurrentDay = storage.getString('currentDay');
     const currentDate = new Date();
@@ -171,9 +170,8 @@ export const useInit = () => {
       if (locationStatus === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('@PEGOU PERMISSAO !');
         setLocationPermission(true);
-      }
-      if (locationStatus === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-        console.log('@O USUÁRIO DEVE LIMPAR OS DADOS');
+      } else {
+        setLocationPermission(false);
       }
     };
     const checkLocation = async () => {
@@ -302,6 +300,7 @@ export const useInit = () => {
           index.toString().padStart(2, '0'),
         );
         setHour(hoursArray);
+        setLoading(false);
       } else {
         console.log('atualiza tudo');
         const fullDate = getDate();
@@ -317,15 +316,11 @@ export const useInit = () => {
 
         fetchHourly(positionLatitude, positionLongitude);
         fetchForecast(positionLatitude, positionLongitude);
+        setLoading(false);
       }
     };
-    /* if (locationPermission === true) {
-      try {
-        optimizer();
-      } catch (error) {
-        console.error('error in optimizer = ', error);
-      }
-    } */
+    optimizer();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
