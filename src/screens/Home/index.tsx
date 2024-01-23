@@ -46,6 +46,7 @@ export default function Home(props: Props) {
   }, [props.navigation]);
   // ============================================================================
   const animationURL = getAnimationName(weatherCode, null, false);
+  const loadingAnimation = require('../../assets/animations/time-passing.json');
 
   const currentTime = new Date();
   const currentHour = currentTime.getHours();
@@ -58,7 +59,9 @@ export default function Home(props: Props) {
     <>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView style={[styles.container, {backgroundColor: primaryColor}]}>
-        {locationPermission ? (
+        {!locationPermission ? (
+          <ErrorInfo />
+        ) : (
           <View>
             <View style={styles.titleArea}>
               <FontAwesome5
@@ -67,11 +70,13 @@ export default function Home(props: Props) {
                 color="#fff"
                 style={styles.iconStyle}
               />
-              <Text style={styles.titleText}> {cityName} </Text>
+              {!loading ? (
+                <Text style={styles.titleText}> {cityName} </Text>
+              ) : null}
             </View>
             <GreetingComponent />
             <LottieView
-              source={animationURL}
+              source={loading ? loadingAnimation : animationURL}
               autoPlay
               loop
               style={[styles.animationArea, {width: 150, height: 150}]}
@@ -203,8 +208,6 @@ export default function Home(props: Props) {
               </View>
             </View>
           </View>
-        ) : (
-          <ErrorInfo />
         )}
       </ScrollView>
     </>
@@ -278,5 +281,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: 20,
+  },
+  loadingBackground: {
+    backgroundColor: 'white',
+    borderRadius: 200,
+    padding: 10,
   },
 });

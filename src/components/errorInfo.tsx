@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center', // Center vertically
+    alignItems: 'center',
   },
   title: {
     color: 'white',
@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
   },
   background: {
     backgroundColor: 'white',
-    borderRadius: 200, // Adjust the border radius as needed
-    padding: 10, // Adjust the padding as needed
+    borderRadius: 200,
+    padding: 10,
   },
   lottieView: {
-    width: 300, // Adjust the width of the LottieView as needed
-    height: 300, // Adjust the height of the LottieView as needed
+    width: 300,
+    height: 300,
   },
   text: {
     color: 'white',

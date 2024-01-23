@@ -19,7 +19,9 @@ type PositionType = {
 };
 
 export const useStateVariables = () => {
-  const [locationPermission, setLocationPermission] = useState(true);
+  const [locationPermission, setLocationPermission] = useState<boolean | null>(
+    null,
+  );
   const [cityName, setCityName] = useState('');
   const [description, setDescription] = useState('');
   const [humidity, setHumidity] = useState(0);
@@ -112,6 +114,7 @@ export const useInit = () => {
   useEffect(() => {
     console.log('useInit funcionando em Home!!');
     setLoading(true);
+    setLocationPermission(storage.getBoolean('locationStatus'));
     // ==================================================================
     const storedCurrentDay = storage.getString('currentDay');
     const currentDate = new Date();
@@ -170,8 +173,10 @@ export const useInit = () => {
       if (locationStatus === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('@PEGOU PERMISSAO !');
         setLocationPermission(true);
+        storage.set('locationStatus', true);
       } else {
         setLocationPermission(false);
+        storage.set('locationStatus', false);
       }
     };
     const checkLocation = async () => {
@@ -181,6 +186,7 @@ export const useInit = () => {
         requestLocation();
       } else {
         setLocationPermission(true);
+        storage.set('locationStatus', true);
       }
     };
     checkLocation();
