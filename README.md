@@ -1,26 +1,6 @@
 # 🌦️ Mateorology 🌪️
 ![image](https://github.com/user-attachments/assets/7486d678-bb79-4781-9aa3-a8eabf4c0119)
 
-# My Project
-
-<p id="text-portuguese">Olá, mundo!</p>
-<p id="text-english" style="display:none;">Hello, world!</p>
-<button onclick="toggleLanguage()">Toggle Language</button>
-
-<script>
-function toggleLanguage() {
-    var textPortuguese = document.getElementById('text-portuguese');
-    var textEnglish = document.getElementById('text-english');
-    if (textPortuguese.style.display === 'none') {
-        textPortuguese.style.display = 'block';
-        textEnglish.style.display = 'none';
-    } else {
-        textPortuguese.style.display = 'none';
-        textEnglish.style.display = 'block';
-    }
-}
-</script>
-
 # UI Screenshot 📱
 ![1](https://github.com/user-attachments/assets/4bc0abc5-3424-4c30-99db-2515cf15728c)
 ![2](https://github.com/user-attachments/assets/bb59763f-ad55-4e44-8995-f9ae6713dc7c)
