@@ -5,6 +5,9 @@
 ![1](https://github.com/user-attachments/assets/4bc0abc5-3424-4c30-99db-2515cf15728c)
 ![2](https://github.com/user-attachments/assets/bb59763f-ad55-4e44-8995-f9ae6713dc7c)
 ![3](https://github.com/user-attachments/assets/ebdaaa10-d229-4daa-ba62-bdddb48f53d0)
+![4](https://github.com/user-attachments/assets/70f339d0-c29a-446c-ad53-b39aec8ad043)
+![5](https://github.com/user-attachments/assets/c0aba017-3dbf-44d7-a888-e7e9cc98cc5c)
+![6](https://github.com/user-attachments/assets/b2c0fb61-c54f-41a8-91c1-879b1d35875f)
 
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
